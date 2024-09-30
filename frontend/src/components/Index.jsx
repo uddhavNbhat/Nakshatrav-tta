@@ -11,4 +11,4 @@ function Main () {
         </div>
     )
 }
-export default Main 
+export default Main

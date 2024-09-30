@@ -1,99 +1,58 @@
-import React, { useEffect, useRef } from "react";
-import * as THREE from "three";
-import { OrbitControls } from "three/examples/jsm/controls/OrbitControls";
-import SunModel from "./SunModel";
-import PlanetModel from "./PlanetModel";
+import { useEffect, useRef } from 'react';
+import * as Spacekit from 'spacekit.js';
+import '../static/SolarSystem.css';
 
 const SolarSystem = () => {
-  const mountRef = useRef(null);
-  const sceneRef = useRef(new THREE.Scene());
+  const vizRef = useRef(null); // Create a ref to store the simulation instance
 
   useEffect(() => {
-    const scene = sceneRef.current;
-    const camera = new THREE.PerspectiveCamera(
-      75,
-      window.innerWidth / window.innerHeight,
-      0.1,
-      1000
-    );
-    const renderer = new THREE.WebGLRenderer({ antialias: true });
-    renderer.setSize(window.innerWidth, window.innerHeight);
-    mountRef.current.appendChild(renderer.domElement);
+    if (!vizRef.current) {
+      const viz = new Spacekit.Simulation(document.getElementById('main-container'), {
+        basePath: 'https://typpo.github.io/spacekit/src',
+      });
+      
+      // Create a background using Yale Bright Star Catalog data.
+      viz.createStars();
+      
+      // Create our first object - the sun - using a preset space object.
+      viz.createObject('sun', Spacekit.SpaceObjectPresets.SUN);
+      
+      // Then add some planets
+      viz.createObject('mercury', Spacekit.SpaceObjectPresets.MERCURY);
+      viz.createObject('venus', Spacekit.SpaceObjectPresets.VENUS);
+      viz.createObject('earth', Spacekit.SpaceObjectPresets.EARTH);
+      viz.createObject('mars', Spacekit.SpaceObjectPresets.MARS);
+      viz.createObject('jupiter', Spacekit.SpaceObjectPresets.JUPITER);
+      viz.createObject('saturn', Spacekit.SpaceObjectPresets.SATURN);
+      viz.createObject('uranus', Spacekit.SpaceObjectPresets.URANUS);
+      viz.createObject('neptune', Spacekit.SpaceObjectPresets.NEPTUNE);
+      
+      // Add Tesla Roadster
+      viz.createObject('spaceman', {
+        labelText: 'Tesla Roadster',
+        ephem: new Spacekit.Ephem({
+          // These parameters define orbit shape.
+          a: 1.324870564730606E+00,
+          e: 2.557785995665682E-01,
+          i: 1.077550722804860E+00,
+          
+          // These parameters define the orientation of the orbit.
+          om: 3.170946964325638E+02,
+          w: 1.774865822248395E+02,
+          ma: 1.764302192487955E+02,
+          
+          // Where the object is in its orbit.
+          epoch: 2458426.500000000,
+        }, 'deg'),
+      });
 
-    // Load the starry background texture and apply it to a large sphere
-    const loader = new THREE.TextureLoader();
-    const starTexture = loader.load('/star.jpg'); // Path to your starry background image
-    const starGeometry = new THREE.SphereGeometry(500, 64, 64); // Large sphere
-    const starMaterial = new THREE.MeshBasicMaterial({
-      map: starTexture,
-      side: THREE.BackSide, // Make sure the texture is visible from the inside
-    });
+      vizRef.current = viz; // Store the simulation instance in the ref
+    }
 
-    const starSphere = new THREE.Mesh(starGeometry, starMaterial);
-    scene.add(starSphere);
-
-    // Keep the star sphere always centered at the camera position
-    const updateStarSpherePosition = () => {
-      starSphere.position.copy(camera.position);
-    };
-
-    // Add soft ambient light
-    const ambientLight = new THREE.AmbientLight(0xffffff, 0.2);
-    scene.add(ambientLight);
-
-    // Create OrbitControls for camera movement
-    const controls = new OrbitControls(camera, renderer.domElement);
-    controls.enableDamping = true;
-    controls.dampingFactor = 0.05;
-    controls.screenSpacePanning = false;
-    controls.maxDistance = 100;
-    controls.minDistance = 2;
-
-    camera.position.set(0, 0, 20); // Initial camera position
-    controls.update();
-
-    // Resize canvas on window resize
-    const handleResize = () => {
-      camera.aspect = window.innerWidth / window.innerHeight;
-      camera.updateProjectionMatrix();
-      renderer.setSize(window.innerWidth, window.innerHeight);
-    };
-    window.addEventListener("resize", handleResize);
-
-    // Animation loop
-    const animate = () => {
-      requestAnimationFrame(animate);
-      controls.update(); // Ensure controls are updated each frame
-
-      // Update star sphere position to always follow the camera
-      updateStarSpherePosition();
-
-      renderer.render(scene, camera);
-    };
-    animate();
-
-    return () => {
-      window.removeEventListener("resize", handleResize);
-      mountRef.current.removeChild(renderer.domElement);
-    };
-  }, []);
+  }, []); // Empty dependency array ensures this effect runs once after the initial render
 
   return (
-    <div ref={mountRef}>
-      <SunModel scene={sceneRef.current} />
-      <PlanetModel
-        size={1}
-        color={0x0000ff}
-        position={{ x: 8, y: 0, z: 0 }}
-        scene={sceneRef.current}
-      />
-      <PlanetModel
-        size={0.6}
-        color={0xff0000}
-        position={{ x: 12, y: 0, z: 0 }}
-        scene={sceneRef.current}
-      />
-    </div>
+    <div id="main-container"></div>
   );
 };
 
