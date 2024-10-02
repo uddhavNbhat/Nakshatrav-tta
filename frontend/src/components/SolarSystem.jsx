@@ -30,23 +30,24 @@ const SolarSystem = () => {
       viz.createLight(SUN_POS);
 
       const planetData = [
-        { name: 'mercury', textureUrl: '/textures/mercury.jpg', radius: 0.0384, ephem: Spacekit.EphemPresets.MERCURY },
-        { name: 'venus', textureUrl: '/textures/venus.jpg', radius: 0.0957, ephem: Spacekit.EphemPresets.VENUS },
-        { name: 'earth', textureUrl: '/textures/earth.jpg', radius: 0.1, ephem: Spacekit.EphemPresets.EARTH },
-        { name: 'mars', textureUrl: '/textures/mars.jpg', radius: 0.0531, ephem: Spacekit.EphemPresets.MARS },
-        { name: 'jupiter', textureUrl: '/textures/jupiter.jpg', radius: 0.1, ephem: Spacekit.EphemPresets.JUPITER },
-        { name: 'saturn', textureUrl: '/textures/saturn.jpg', radius: 0.083, ephem: Spacekit.EphemPresets.SATURN },
-        { name: 'uranus', textureUrl: '/textures/uranus.jpg', radius: 0.0364, ephem: Spacekit.EphemPresets.URANUS },
-        { name: 'neptune', textureUrl: '/textures/neptune.jpg', radius: 0.0353, ephem: Spacekit.EphemPresets.NEPTUNE },
+        { name: 'mercury', textureUrl: '/textures/mercury.jpg', radius: 0.0384, ephem: Spacekit.EphemPresets.MERCURY, atmosColour: '#d0d0d0', },
+        { name: 'venus', textureUrl: '/textures/venus.jpg', radius: 0.0957, ephem: Spacekit.EphemPresets.VENUS, atmosColour: 0xc7c1a8, },
+        { name: 'earth', textureUrl: '/textures/earth.jpg', radius: 0.1, ephem: Spacekit.EphemPresets.EARTH, atmosColour: 0xc7c1a8, },
+        { name: 'mars', textureUrl: '/textures/mars.jpg', radius: 0.0531, ephem: Spacekit.EphemPresets.MARS, atmosColour: 0xc7c1a8, },
+        { name: 'jupiter', textureUrl: '/textures/jupiter.jpg', radius: 0.1, ephem: Spacekit.EphemPresets.JUPITER, atmosColour: 0xc7c1a8, },
+        { name: 'saturn', textureUrl: '/textures/saturn.jpg', radius: 0.083, ephem: Spacekit.EphemPresets.SATURN, atmosColour: 0xc7c1a8, },
+        { name: 'uranus', textureUrl: '/textures/uranus.jpg', radius: 0.0364, ephem: Spacekit.EphemPresets.URANUS, atmosColour: 0xc7c1a8, },
+        { name: 'neptune', textureUrl: '/textures/neptune.jpg', radius: 0.0353, ephem: Spacekit.EphemPresets.NEPTUNE, atmosColour: 0xc7c1a8, },
       ];
 
       const planets = [];
-      planetData.forEach(({ name, textureUrl, radius, ephem }) => {
+      planetData.forEach(({ name, textureUrl, radius, ephem, atmosColour }) => {
         const planet = viz.createSphere(name, {
           textureUrl,
           radius,
           ephem,
           rotation: { enable: true, speed: 0.2 },
+          atmosphere: {enable: true, color: atmosColour,}
         });
         planets.push(planet); // Store planet instances
       });
