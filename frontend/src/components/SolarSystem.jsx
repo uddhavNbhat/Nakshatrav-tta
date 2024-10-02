@@ -2,7 +2,6 @@ import { useEffect, useRef, useState } from 'react';
 import * as Spacekit from 'spacekit.js';
 import '../static/SolarSystem.css';
 import * as dat from 'dat.gui';
-import { THREE } from 'spacekit.js';
 
 const SolarSystem = () => {
   const vizRef = useRef(null); // Create a ref to store the simulation instance
