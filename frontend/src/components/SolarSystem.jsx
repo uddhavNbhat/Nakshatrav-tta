@@ -1,79 +1,144 @@
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import * as Spacekit from 'spacekit.js';
 import '../static/SolarSystem.css';
+import * as dat from 'dat.gui';
+import { THREE } from 'spacekit.js';
 
 const SolarSystem = () => {
   const vizRef = useRef(null); // Create a ref to store the simulation instance
+  const [timeSpeed, setTimeSpeed] = useState(10); // State for controlling time speed
+  const [isPaused, setIsPaused] = useState(false); // Control pause/play
+  const [selectedPlanet, setSelectedPlanet] = useState(null);
 
   useEffect(() => {
     if (!vizRef.current) {
       const viz = new Spacekit.Simulation(document.getElementById('main-container'), {
         basePath: 'https://typpo.github.io/spacekit/src',
+        jdPerSecond: timeSpeed,
+        startPaused: isPaused,
+        enableMouse: true,
+        enableKeyboard: true,
+        camera: {
+          initialPosition: [0, -10, 5],
+          enableDrift: false,
+        },
       });
-      
-      // Create a background using Yale Bright Star Catalog data.
-      viz.createStars();
-      
-      // Create our first object - the sun - using a preset space object.
-      viz.createObject('sun', Spacekit.SpaceObjectPresets.SUN);
 
+      // Create stars and sun
+      viz.createStars();
+      const sun = viz.createObject('sun', Spacekit.SpaceObjectPresets.SUN);
       const SUN_POS = [0, 0, 0];
       viz.createLight(SUN_POS);
-      
-      // Then add some planets
-      viz.createObject('mercury', Spacekit.SpaceObjectPresets.MERCURY);
-      viz.createObject('venus', Spacekit.SpaceObjectPresets.VENUS);
-      viz.createObject('earth', Spacekit.SpaceObjectPresets.EARTH);
-      viz.createObject('mars', Spacekit.SpaceObjectPresets.MARS);
-      const jupiter = viz.createSphere('jupiter2', {
-        textureUrl: '/textures/jupiter.jpg',
-        radius: 0.1, 
-        ephem: Spacekit.EphemPresets.JUPITER,
-        levelsOfDetail: [
-          { radii: 0, segments: 64 },
-          { radii: 30, segments: 16 },
-          { radii: 60, segments: 8 },
-        ],
-        atmosphere: {
-          enable: true,
-          color: 0xc7c1a8,
-        },
-        rotation: {
-          enable: true,
-          speed: 2,
-        },
-      });      
-      viz.getViewer().followObject(jupiter, [-0.75, -0.75, 0.5]);
-      viz.createObject('saturn', Spacekit.SpaceObjectPresets.SATURN);
-      viz.createObject('uranus', Spacekit.SpaceObjectPresets.URANUS);
-      viz.createObject('neptune', Spacekit.SpaceObjectPresets.NEPTUNE);
-      
-      // Add Tesla Roadster
-      viz.createObject('spaceman', {
-        labelText: 'Tesla Roadster',
-        ephem: new Spacekit.Ephem({
-          // These parameters define orbit shape.
-          a: 1.324870564730606E+00,
-          e: 2.557785995665682E-01,
-          i: 1.077550722804860E+00,
-          
-          // These parameters define the orientation of the orbit.
-          om: 3.170946964325638E+02,
-          w: 1.774865822248395E+02,
-          ma: 1.764302192487955E+02,
-          
-          // Where the object is in its orbit.
-          epoch: 2458426.500000000,
-        }, 'deg'),
+
+      const planetData = [
+        { name: 'mercury', textureUrl: '/textures/mercury.jpg', radius: 0.0384, ephem: Spacekit.EphemPresets.MERCURY },
+        { name: 'venus', textureUrl: '/textures/venus.jpg', radius: 0.0957, ephem: Spacekit.EphemPresets.VENUS },
+        { name: 'earth', textureUrl: '/textures/earth.jpg', radius: 0.1, ephem: Spacekit.EphemPresets.EARTH },
+        { name: 'mars', textureUrl: '/textures/mars.jpg', radius: 0.0531, ephem: Spacekit.EphemPresets.MARS },
+        { name: 'jupiter', textureUrl: '/textures/jupiter.jpg', radius: 0.1, ephem: Spacekit.EphemPresets.JUPITER },
+        { name: 'saturn', textureUrl: '/textures/saturn.jpg', radius: 0.083, ephem: Spacekit.EphemPresets.SATURN },
+        { name: 'uranus', textureUrl: '/textures/uranus.jpg', radius: 0.0364, ephem: Spacekit.EphemPresets.URANUS },
+        { name: 'neptune', textureUrl: '/textures/neptune.jpg', radius: 0.0353, ephem: Spacekit.EphemPresets.NEPTUNE },
+      ];
+
+      const planets = [];
+      planetData.forEach(({ name, textureUrl, radius, ephem }) => {
+        const planet = viz.createSphere(name, {
+          textureUrl,
+          radius,
+          ephem,
+          rotation: { enable: true, speed: 0.2 },
+        });
+        planets.push(planet); // Store planet instances
       });
 
-      vizRef.current = viz; // Store the simulation instance in the ref
-    }
+      // Store the simulation instance in the ref
+      vizRef.current = viz;
 
-  }, []); // Empty dependency array ensures this effect runs once after the initial render
+      // Initialize dat.GUI
+      const gui = new dat.GUI();
+
+      // Wrap each planet in the GUI to trigger zoom and display name
+      planetData.forEach((planet, index) => {
+        gui.add({ [planet.name]: false }, planet.name)
+          .name(planet.name)
+          .onChange((value) => {
+            const viewer = viz.getViewer();
+            const camera = viz.getViewer().camera;
+            if (value) {
+              // If a planet is selected, set the selected planet state
+              setSelectedPlanet(planet.name);
+              
+              // Get the current JD from the simulation
+              const currentJD = viz.getJd(); // Retrieve the current Julian Date
+              
+              // Get the planet object directly
+              const planetObject = planets[index];
+      
+              // Use the getPosition method with the current JD
+              const pos = planetObject.getPosition(currentJD); // Pass the current JD
+      
+              if (pos) {
+                camera.position.set(pos[0], pos[1]+0.5, pos[2]);
+                viewer.followObject(planetObject,[pos[0], pos[1]+0.5, pos[2]]);
+                // Optionally, log the position to verify
+                console.log(`Camera moved to: x=${pos[0]}, y=${pos[1]}, z=${pos[2]}`);
+              } else {
+                console.error(`Position for ${planet.name} is undefined.`);
+              }
+            } else {
+              // If this button was unchecked, make sure to clear the selection
+                setSelectedPlanet(null);
+                camera.position.set(0, 5, 10); // Move the camera back to the sun's position
+                viewer.followObject(sun,[0, -10, 5]);
+                console.log(`Camera moved back to the sun: x=0, y=0, z=0`);
+            }
+          });
+      });
+      
+      gui.open(); // Open the GUI
+      gui.domElement.style.position = 'absolute'; // Position the GUI
+      gui.domElement.style.top = '60px'; // Adjust based on your navbar height
+      gui.domElement.style.left = '20px'; // Optional: adjust for horizontal positioning
+    }
+  }, [timeSpeed, isPaused,selectedPlanet]); // Dependencies include cameraPos
+
+  // Handle time speed and pause logic
+  useEffect(() => {
+    if (vizRef.current) {
+      const simulation = vizRef.current;
+
+      // Set the JD (Julian Date) progression speed
+      simulation.setJdPerSecond(timeSpeed); // Controls time speed multiplier
+
+      if (isPaused) {
+        simulation.stop(); // Pauses the simulation
+      } else {
+        simulation.start(); // Resumes the simulation
+      }
+    }
+  }, [timeSpeed, isPaused]);
 
   return (
-    <div id="main-container"></div>
+    <div>
+      <div id="main-container"></div>
+      <div className="time-control">
+        <label htmlFor="timeSpeed">Time Speed: </label>
+        <input
+          id="timeSpeed"
+          type="range"
+          min="1"
+          max="10"
+          step="1"
+          value={timeSpeed}
+          onChange={(e) => setTimeSpeed(Number(e.target.value))}
+        />
+        <span>{timeSpeed}x</span>
+        <button onClick={() => setIsPaused(!isPaused)} style={{ marginLeft: "5px" }}>
+          {isPaused ? 'Resume' : 'Pause'}
+        </button>
+      </div>
+    </div>
   );
 };
 

@@ -14,4 +14,26 @@ html,body,#main-container {
     color: white;
     padding: 10px;
     border-radius: 5px;
-}
+  }
+
+  .time-control {
+    position: absolute;
+    bottom: 10px;
+    left: 50%;
+    transform: translateX(-50%);
+    background-color: rgba(255, 255, 255, 0.8);
+    padding: 10px;
+    border-radius: 5px;
+    display: flex;
+    align-items: center;
+  }
+  
+  .time-control label {
+    margin-right: 10px;
+  }
+  
+  .time-control input {
+    margin-right: 10px;
+  } 
+
+  
