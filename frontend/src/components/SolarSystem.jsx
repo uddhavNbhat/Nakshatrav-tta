@@ -68,7 +68,7 @@ const SolarSystem = () => {
           a: 1.523679*auScaleFactor, 
           e: 0.093394, 
           i: 1.85061, 
-          om: 49.578, 
+          om: 49.578,
           w: 336.040, 
           ma: 355.453, 
           epoch: 2451545.0, 
@@ -113,12 +113,13 @@ const SolarSystem = () => {
       ];
 
       const planets = [];
-      planetData.forEach(({ name, textureUrl, radius, ephem }) => {
+      planetData.forEach(({ name, textureUrl, radius, ephem, atmosColour }) => {
         const planet = viz.createSphere(name, {
           textureUrl,
           radius,
           ephem,
           rotation: { enable: true, speed: 0.2 },
+          atmosphere: {enable: true, color: atmosColour,}
         });
         planets.push(planet); // Store planet instances
       });
