@@ -13,6 +13,7 @@ const SolarSystem = () => {
     if (!vizRef.current) {
       const viz = new Spacekit.Simulation(document.getElementById('main-container'), {
         basePath: 'https://typpo.github.io/spacekit/src',
+        unitsPerAu: 100.0,
         jdPerSecond: timeSpeed,
         startPaused: isPaused,
         enableMouse: true,
@@ -24,12 +25,10 @@ const SolarSystem = () => {
       });
 
       // Create stars and sun
-      const auScaleFactor = 75;  // This can be adjusted for better visualization in your app.
-      const scaleFactor = 0.00001;
       viz.createStars();
       const sun = viz.createSphere('sun', {
         textureUrl: '/textures/sun.jpg',
-        radius: 696340 * scaleFactor, // Sun's radius scaled down
+        radius: 0.0696340, // Sun's radius scaled down
         position: [0, 0, 0], // Set the Sun at the center of the solar system
         rotation: { enable: true, speed: 0.2 }, // Sun's rotation
       });
@@ -37,93 +36,130 @@ const SolarSystem = () => {
       viz.createLight(SUN_POS);
 
       const planetData = [
-        { name: 'mercury', textureUrl: '/textures/mercury.jpg', radius: 2439.7*scaleFactor, ephem: new Spacekit.Ephem({
-          a: 0.387098*auScaleFactor, // semi-major axis in AU
-          e: 0.205630, // eccentricity
-          i: 7.00487, // inclination in degrees
-          om: 48.331, // longitude of ascending node in degrees
-          w: 77.456, // argument of perihelion in degrees
-          ma: 252.250, // mean anomaly in degrees
-          epoch: 2451545.0, // J2000 epoch
-        }, 'deg') },
-        { name: 'venus', textureUrl: '/textures/venus.jpg', radius: 6051.8*scaleFactor , ephem: new Spacekit.Ephem({
-          a: 0.723332*auScaleFactor,
-          e: 0.006772,
-          i: 3.39471,
-          om: 76.680,
-          w: 131.532,
-          ma: 181.979,
-          epoch: 2451545.0,
-        }, 'deg') },
-        { name: 'earth', textureUrl: '/textures/earth.jpg', radius: 6371 * scaleFactor, ephem: new Spacekit.Ephem({
-          a: 1.000000*auScaleFactor, 
-          e: 0.016710, 
-          i: 0.00005, 
-          om: 348.739, 
-          w: 102.947, 
-          ma: 100.464, 
-          epoch: 2451545.0, 
-        }, 'deg') },
-        { name: 'mars', textureUrl: '/textures/mars.jpg', radius: 3389.5 * scaleFactor, ephem: new Spacekit.Ephem({
-          a: 1.523679*auScaleFactor, 
-          e: 0.093394, 
-          i: 1.85061, 
-          om: 49.578,
-          w: 336.040, 
-          ma: 355.453, 
-          epoch: 2451545.0, 
-        }, 'deg') },
-        { name: 'jupiter', textureUrl: '/textures/jupiter.jpg', radius: 69911 * scaleFactor, ephem: new Spacekit.Ephem({
-          a: 5.20260*auScaleFactor, 
-          e: 0.048498, 
-          i: 1.30327, 
-          om: 100.464, 
-          w: 14.331, 
-          ma: 34.396, 
-          epoch: 2451545.0, 
-        }, 'deg') },
-        { name: 'saturn', textureUrl: '/textures/saturn.jpg', radius: 58232 * scaleFactor, ephem: new Spacekit.Ephem({
-          a: 9.55491*auScaleFactor, 
-          e: 0.055508, 
-          i: 2.48888, 
-          om: 113.665, 
-          w: 93.056, 
-          ma: 49.944, 
-          epoch: 2451545.0, 
-        }, 'deg') },
-        { name: 'uranus', textureUrl: '/textures/uranus.jpg', radius: 25362 * scaleFactor, ephem: new Spacekit.Ephem({
-          a: 19.2184*auScaleFactor, 
-          e: 0.046295, 
-          i: 0.773, 
-          om: 74.006, 
-          w: 170.964, 
-          ma: 313.232, 
-          epoch: 2451545.0, 
-        }, 'deg') },
-        { name: 'neptune', textureUrl: '/textures/neptune.jpg', radius: 24622 * scaleFactor, ephem: new Spacekit.Ephem({
-          a: 30.1104*auScaleFactor, 
-          e: 0.008988, 
-          i: 1.769, 
-          om: 131.784, 
-          w: 44.971, 
-          ma: 304.880, 
-          epoch: 2451545.0, 
-        }, 'deg') },
-
+        { name: 'mercury', textureUrl: '/textures/mercury.jpg', labelText: 'Mercury', radius: 0.00024397, ephem: new Spacekit.Ephem({
+            a: 0.387098, 
+            e: 0.205630, 
+            i: 7.00487, 
+            om: 48.331, 
+            w: 77.456, 
+            ma: 252.250, 
+            epoch: 2451545.0,
+          }, 'deg') },
+        { name: 'venus', textureUrl: '/textures/venus.jpg', labelText: 'Venus', radius: 0.00060518, ephem: new Spacekit.Ephem({
+            a: 0.723332,
+            e: 0.006772,
+            i: 3.39471,
+            om: 76.680,
+            w: 131.532,
+            ma: 181.979,
+            epoch: 2451545.0,
+          }, 'deg') },
+        { name: 'earth', textureUrl: '/textures/earth.jpg', labelText: 'Earth', radius: 0.0006371, ephem: new Spacekit.Ephem({
+            a: 1.000000,
+            e: 0.016710,
+            i: 0.00005,
+            om: 348.739,
+            w: 102.947,
+            ma: 100.464,
+            epoch: 2451545.0,
+          }, 'deg'), moons: [{ name: 'moon', preset: Spacekit.SpaceObjectPresets.MOON }] },
+        { name: 'mars', textureUrl: '/textures/mars.jpg', labelText: 'Mars', radius: 0.00033895, ephem: new Spacekit.Ephem({
+            a: 1.523679,
+            e: 0.093394,
+            i: 1.85061,
+            om: 49.578,
+            w: 336.040,
+            ma: 355.453,
+            epoch: 2451545.0,
+          }, 'deg') },
+        { name: 'jupiter', textureUrl: '/textures/jupiter.jpg', labelText: 'Jupiter', radius: 0.0069911, ephem: new Spacekit.Ephem({
+            a: 5.20260,
+            e: 0.048498,
+            i: 1.30327,
+            om: 100.464,
+            w: 14.331,
+            ma: 34.396,
+            epoch: 2451545.0,
+          }, 'deg') },
+        { name: 'saturn', textureUrl: '/textures/saturn.jpg', labelText: 'Saturn', radius: 0.0058232, ephem: new Spacekit.Ephem({
+            a: 9.55491,
+            e: 0.055508,
+            i: 2.48888,
+            om: 113.665,
+            w: 93.056,
+            ma: 49.944,
+            epoch: 2451545.0,
+          }, 'deg') },
+        { name: 'uranus', textureUrl: '/textures/uranus.jpg', labelText: 'Uranus', radius: 0.0025362, ephem: new Spacekit.Ephem({
+            a: 19.2184,
+            e: 0.046295,
+            i: 0.773,
+            om: 74.006,
+            w: 170.964,
+            ma: 313.232,
+            epoch: 2451545.0,
+          }, 'deg') },
+        { name: 'neptune', textureUrl: '/textures/neptune.jpg', labelText: 'Neptune', radius: 0.0024622, ephem: new Spacekit.Ephem({
+            a: 30.1104,
+            e: 0.008988,
+            i: 1.769,
+            om: 131.784,
+            w: 44.971,
+            ma: 304.880,
+            epoch: 2451545.0,
+          }, 'deg') },
       ];
 
       const planets = [];
-      planetData.forEach(({ name, textureUrl, radius, ephem, atmosColour }) => {
+      planetData.forEach(({ name, textureUrl, labelText, radius, ephem, moons }) => {
         const planet = viz.createSphere(name, {
           textureUrl,
           radius,
           ephem,
+          labelText, // Assign label to each planet
           rotation: { enable: true, speed: 0.2 },
-          atmosphere: {enable: true, color: atmosColour,}
         });
+      
+        // Add moons for planets like Earth
+        if (moons) {
+          moons.forEach(({ name, preset }) => {
+            const moon = viz.createObject(name, preset);
+            moon.orbitAround(planet); // Make the moon orbit the planet
+          });
+        }
+      
         planets.push(planet); // Store planet instances
       });
 
+      const moonObjs = [];
+// Fetch satellites (moons) for planets
+viz.loadNaturalSatellites().then((loader) => {
+  // Create an array mapping planets to their respective satellites
+  const planetsWithMoons = [
+    { planet: planets[3], satellites: loader.getSatellitesForPlanet('mars') },
+    { planet: planets[4], satellites: loader.getSatellitesForPlanet('jupiter') }, // Jupiter
+    { planet: planets[5], satellites: loader.getSatellitesForPlanet('saturn') },  // Saturn
+    { planet: planets[6], satellites: loader.getSatellitesForPlanet('uranus') },  // Uranus
+    { planet: planets[7], satellites: loader.getSatellitesForPlanet('neptune') }   // Neptune
+  ];
+
+  // Iterate over each planet and its satellites
+  planetsWithMoons.forEach(({ planet, satellites }) => {
+    // Create objects for each moon
+    satellites.forEach((moon) => {
+      const obj = viz.createObject(moon.name, {
+        labelText: moon.name,  // Assign moon name as label
+        ephem: moon.ephem,     // Use moon's ephemeris data
+        particleSize: 50,      // Customize particle size (optional)
+      });
+
+      obj.orbitAround(planet); // Make the moon orbit its corresponding planet
+
+      // Push the moon object to moonObjs array
+      moonObjs.push(obj);
+    });
+  });
+});
       // Store the simulation instance in the ref
       vizRef.current = viz;
 
@@ -146,10 +182,10 @@ const SolarSystem = () => {
               
               // Get the planet object directly
               const planetObject = planets[index];
-      
+              
               // Use the getPosition method with the current JD
               const pos = planetObject.getPosition(currentJD); // Pass the current JD
-      
+              
               if (pos) {
                 camera.position.set(pos[0], pos[1]+0.5, pos[2]);
                 viewer.followObject(planetObject,[pos[0], pos[1]+0.5, pos[2]]);
