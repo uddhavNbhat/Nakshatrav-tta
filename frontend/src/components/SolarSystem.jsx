@@ -24,21 +24,14 @@ const SolarSystem = () => {
       });
 
       // Create stars and sun
-      const auScaleFactor = 75;  // This can be adjusted for better visualization in your app.
-      const scaleFactor = 0.00001;
       viz.createStars();
-      const sun = viz.createSphere('sun', {
-        textureUrl: '/textures/sun.jpg',
-        radius: 696340 * scaleFactor, // Sun's radius scaled down
-        position: [0, 0, 0], // Set the Sun at the center of the solar system
-        rotation: { enable: true, speed: 0.2 }, // Sun's rotation
-      });
+      const sun = viz.createObject('sun', Spacekit.SpaceObjectPresets.SUN);
       const SUN_POS = [0, 0, 0];
       viz.createLight(SUN_POS);
 
       const planetData = [
-        { name: 'mercury', textureUrl: '/textures/mercury.jpg', radius: 2439.7*scaleFactor, ephem: new Spacekit.Ephem({
-          a: 0.387098*auScaleFactor, // semi-major axis in AU
+        { name: 'mercury', textureUrl: '/textures/mercury.jpg', radius: (2439.7 / 6371) * 0.1, ephem: new Spacekit.Ephem({
+          a: 0.387098, // semi-major axis in AU
           e: 0.205630, // eccentricity
           i: 7.00487, // inclination in degrees
           om: 48.331, // longitude of ascending node in degrees
@@ -46,17 +39,17 @@ const SolarSystem = () => {
           ma: 252.250, // mean anomaly in degrees
           epoch: 2451545.0, // J2000 epoch
         }, 'deg') },
-        { name: 'venus', textureUrl: '/textures/venus.jpg', radius: 6051.8*scaleFactor , ephem: new Spacekit.Ephem({
-          a: 0.723332*auScaleFactor,
-          e: 0.006772,
-          i: 3.39471,
-          om: 76.680,
-          w: 131.532,
-          ma: 181.979,
-          epoch: 2451545.0,
+        { name: 'venus', textureUrl: '/textures/venus.jpg', radius: (6051.8 / 6371) * 0.1, ephem: new Spacekit.Ephem({
+          a: 0.723332, 
+          e: 0.006772, 
+          i: 3.39471, 
+          om: 76.680, 
+          w: 131.532, 
+          ma: 181.979, 
+          epoch: 2451545.0, 
         }, 'deg') },
-        { name: 'earth', textureUrl: '/textures/earth.jpg', radius: 6371 * scaleFactor, ephem: new Spacekit.Ephem({
-          a: 1.000000*auScaleFactor, 
+        { name: 'earth', textureUrl: '/textures/earth.jpg', radius: 0.1, ephem: new Spacekit.Ephem({
+          a: 1.000000, 
           e: 0.016710, 
           i: 0.00005, 
           om: 348.739, 
@@ -64,8 +57,8 @@ const SolarSystem = () => {
           ma: 100.464, 
           epoch: 2451545.0, 
         }, 'deg') },
-        { name: 'mars', textureUrl: '/textures/mars.jpg', radius: 3389.5 * scaleFactor, ephem: new Spacekit.Ephem({
-          a: 1.523679*auScaleFactor, 
+        { name: 'mars', textureUrl: '/textures/mars.jpg', radius: (3389.5 / 6371) * 0.1, ephem: new Spacekit.Ephem({
+          a: 1.523679, 
           e: 0.093394, 
           i: 1.85061, 
           om: 49.578,
@@ -73,8 +66,8 @@ const SolarSystem = () => {
           ma: 355.453, 
           epoch: 2451545.0, 
         }, 'deg') },
-        { name: 'jupiter', textureUrl: '/textures/jupiter.jpg', radius: 69911 * scaleFactor, ephem: new Spacekit.Ephem({
-          a: 5.20260*auScaleFactor, 
+        { name: 'jupiter', textureUrl: '/textures/jupiter.jpg', radius: (69911 / 6371) * 0.1, ephem: new Spacekit.Ephem({
+          a: 5.20260, 
           e: 0.048498, 
           i: 1.30327, 
           om: 100.464, 
@@ -82,8 +75,8 @@ const SolarSystem = () => {
           ma: 34.396, 
           epoch: 2451545.0, 
         }, 'deg') },
-        { name: 'saturn', textureUrl: '/textures/saturn.jpg', radius: 58232 * scaleFactor, ephem: new Spacekit.Ephem({
-          a: 9.55491*auScaleFactor, 
+        { name: 'saturn', textureUrl: '/textures/saturn.jpg', radius: (58232 / 6371) * 0.1, ephem: new Spacekit.Ephem({
+          a: 9.55491, 
           e: 0.055508, 
           i: 2.48888, 
           om: 113.665, 
@@ -91,8 +84,8 @@ const SolarSystem = () => {
           ma: 49.944, 
           epoch: 2451545.0, 
         }, 'deg') },
-        { name: 'uranus', textureUrl: '/textures/uranus.jpg', radius: 25362 * scaleFactor, ephem: new Spacekit.Ephem({
-          a: 19.2184*auScaleFactor, 
+        { name: 'uranus', textureUrl: '/textures/uranus.jpg', radius: (25362 / 6371) * 0.1, ephem: new Spacekit.Ephem({
+          a: 19.2184, 
           e: 0.046295, 
           i: 0.773, 
           om: 74.006, 
@@ -100,8 +93,8 @@ const SolarSystem = () => {
           ma: 313.232, 
           epoch: 2451545.0, 
         }, 'deg') },
-        { name: 'neptune', textureUrl: '/textures/neptune.jpg', radius: 24622 * scaleFactor, ephem: new Spacekit.Ephem({
-          a: 30.1104*auScaleFactor, 
+        { name: 'neptune', textureUrl: '/textures/neptune.jpg', radius: (24622 / 6371) * 0.1, ephem: new Spacekit.Ephem({
+          a: 30.1104, 
           e: 0.008988, 
           i: 1.769, 
           om: 131.784, 
@@ -109,7 +102,6 @@ const SolarSystem = () => {
           ma: 304.880, 
           epoch: 2451545.0, 
         }, 'deg') },
-
       ];
 
       const planets = [];
