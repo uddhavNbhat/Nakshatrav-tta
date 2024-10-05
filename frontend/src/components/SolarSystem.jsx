@@ -191,9 +191,9 @@ const SolarSystem = () => {
       guiContainer.classList.add('sidebar');
       guiContainer.style.position = 'absolute';
       guiContainer.style.top = '60px'; // Adjust this to match your navbar height
-      guiContainer.style.right = '0';
+      guiContainer.style.right = '12px';
       guiContainer.style.height = 'calc(100% - 60px)'; // Full height minus navbar
-      guiContainer.style.width = '250px'; // Width of the sidebar
+      guiContainer.style.width = '130px'; // Width of the sidebar
       guiContainer.style.zIndex = '100'; // Ensure it's on top
       guiContainer.style.display = isSidebarVisible ? 'block' : 'none';
 
