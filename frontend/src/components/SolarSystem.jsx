@@ -1,33 +1,32 @@
-import { useEffect, useRef, useState } from 'react';
-import * as Spacekit from 'spacekit.js';
-import '../static/SolarSystem.css';
-import * as dat from 'dat.gui';
-import 'bootstrap/dist/css/bootstrap.min.css';
+import { useEffect, useRef, useState } from "react";
+import * as Spacekit from "spacekit.js";
+import "../static/SolarSystem.css";
+import * as dat from "dat.gui";
+import "bootstrap/dist/css/bootstrap.min.css";
 
 const SolarSystem = () => {
-  const vizRef = useRef(null); // Create a ref to store the simulation instance
-  const [timeSpeed, setTimeSpeed] = useState(10); // State for controlling time speed
-  const [isPaused, setIsPaused] = useState(false); // Control pause/play
-  const [selectedPlanet, setSelectedPlanet] = useState(null);
-  const [isSidebarVisible, setSidebarVisible] = useState(true); 
-  const [selectedMoon, setSelectedMoon] = useState(null);
-  const guiContainerRef = useRef(null);
-  
+    const vizRef = useRef(null); // Create a ref to store the simulation instance
+    const [timeSpeed, setTimeSpeed] = useState(10); // State for controlling time speed
+    const [isPaused, setIsPaused] = useState(false); // Control pause/play
+    const [selectedPlanet, setSelectedPlanet] = useState(null);
+    const [isSidebarVisible, setSidebarVisible] = useState(true);
+    const [selectedMoon, setSelectedMoon] = useState(null);
+    const guiContainerRef = useRef(null);
 
-  useEffect(() => {
-    if (!vizRef.current) {
-      const viz = new Spacekit.Simulation(document.getElementById('main-container'), {
-        basePath: 'https://typpo.github.io/spacekit/src',
-        unitsPerAu: 100.0,
-        jdPerSecond: timeSpeed,
-        startPaused: isPaused,
-        enableMouse: true,
-        enableKeyboard: true,
-        camera: {
-          initialPosition: [0, -10, 5],
-          enableDrift: false,
-        },
-      });
+    useEffect(() => {
+        if (!vizRef.current) {
+            const viz = new Spacekit.Simulation(document.getElementById("main-container"), {
+                basePath: "https://typpo.github.io/spacekit/src",
+                unitsPerAu: 100.0,
+                jdPerSecond: timeSpeed,
+                startPaused: isPaused,
+                enableMouse: true,
+                enableKeyboard: true,
+                camera: {
+                    initialPosition: [0, -30, 10],
+                    enableDrift: false,
+                },
+            });
 
       // Create stars and sun
       viz.createStars();
@@ -187,181 +186,178 @@ const SolarSystem = () => {
       });
 
 
-      // Store the simulation instance in the ref
-      vizRef.current = viz;
+            // Store the simulation instance in the ref
+            vizRef.current = viz;
 
-      // Initialize dat.GUI
-      const gui = new dat.GUI({ autoPlace: false }); // Disable automatic placement
+            // Initialize dat.GUI
+            const gui = new dat.GUI({ autoPlace: false }); // Disable automatic placement
 
-      // Create a sidebar element
-      const guiContainer = document.createElement('div');
-      guiContainer.classList.add('sidebar');
-      guiContainer.style.position = 'absolute';
-      guiContainer.style.top = '60px'; // Adjust this to match your navbar height
-      guiContainer.style.right = '12px';
-      guiContainer.style.height = 'calc(100% - 60px)'; // Full height minus navbar
-      guiContainer.style.width = '130px'; // Width of the sidebar
-      guiContainer.style.zIndex = '100'; // Ensure it's on top
-      guiContainer.style.display = isSidebarVisible ? 'block' : 'none';
+            // Create a sidebar element
+            const guiContainer = document.createElement("div");
+            guiContainer.classList.add("sidebar");
+            guiContainer.style.position = "absolute";
+            guiContainer.style.top = "60px"; // Adjust this to match your navbar height
+            guiContainer.style.right = "12px";
+            guiContainer.style.height = "calc(100% - 60px)"; // Full height minus navbar
+            guiContainer.style.width = "130px"; // Width of the sidebar
+            guiContainer.style.zIndex = "100"; // Ensure it's on top
+            guiContainer.style.display = isSidebarVisible ? "block" : "none";
 
-      // Append the GUI to the sidebar
-      guiContainer.appendChild(gui.domElement);
-      document.body.appendChild(guiContainer);
-      guiContainerRef.current = guiContainer;
+            // Append the GUI to the sidebar
+            guiContainer.appendChild(gui.domElement);
+            document.body.appendChild(guiContainer);
+            guiContainerRef.current = guiContainer;
 
-      const planetFolder = gui.addFolder('Planets');
-      const planetStates = {}; // Object to hold planet states
+            const planetFolder = gui.addFolder("Planets");
+            const planetStates = {}; // Object to hold planet states
 
-      planetData.forEach((planet) => {
-        planetStates[planet.name] = false; // Initialize all planets as unchecked
-      });
-  
-      planetData.forEach((planet, index) => {
-        planetFolder.add(planetStates, planet.name)
-          .name(planet.name)
-          .onChange((value) => {
-            if (value) {
-              // Deselect all planets and moons when a new planet is selected
-              Object.keys(planetStates).forEach(p => planetStates[p] = false);
-              Object.keys(moonStates).forEach(m => moonStates[m] = false);
-  
-              // Only set the current planet to true
-              planetStates[planet.name] = true;
-              setSelectedPlanet(planet.name);
-              setSelectedMoon(null); // Reset moon selection
-  
-              // Move the camera to the selected planet (existing logic)
-              const viewer = viz.getViewer();
-              const camera = viz.getViewer().camera;
-              const currentJD = viz.getJd();
-              const planetObject = planets[index];
-              const pos = planetObject.getPosition(currentJD);
-  
-              if (pos) {
-                camera.position.set(pos[0], pos[1] + 0.5, pos[2]);
-                viewer.followObject(planetObject, [pos[0], pos[1] + 0.5, pos[2]]);
-                console.log(`Camera moved to: x=${pos[0]}, y=${pos[1]}, z=${pos[2]}`);
-              }
+            planetData.forEach((planet) => {
+                planetStates[planet.name] = false; // Initialize all planets as unchecked
+            });
+
+            planetData.forEach((planet, index) => {
+                planetFolder
+                    .add(planetStates, planet.name)
+                    .name(planet.name)
+                    .onChange((value) => {
+                        if (value) {
+                            // Deselect all planets and moons when a new planet is selected
+                            Object.keys(planetStates).forEach((p) => (planetStates[p] = false));
+                            Object.keys(moonStates).forEach((m) => (moonStates[m] = false));
+
+                            // Only set the current planet to true
+                            planetStates[planet.name] = true;
+                            setSelectedPlanet(planet.name);
+                            setSelectedMoon(null); // Reset moon selection
+
+                            // Move the camera to the selected planet (existing logic)
+                            const viewer = viz.getViewer();
+                            const camera = viz.getViewer().camera;
+                            const currentJD = viz.getJd();
+                            const planetObject = planets[index];
+                            const pos = planetObject.getPosition(currentJD);
+                            const zoomFactor = 0.0005;
+
+                            if (pos) {
+                                camera.position.set(pos[0] * zoomFactor, pos[1] * zoomFactor, pos[2] * zoomFactor); // Apply zoomFactor
+                                viewer.followObject(planetObject, [pos[0] * zoomFactor, pos[1] * zoomFactor, pos[2] * zoomFactor]);
+                                console.log(`Camera zoomed to: x=${pos[0] * zoomFactor}, y=${pos[1] * zoomFactor}, z=${pos[2] * zoomFactor}`);
+                            }
+                        } else {
+                            // If unchecked, reset camera to sun
+                            setSelectedPlanet(null);
+                            const camera = viz.getViewer().camera;
+                            camera.position.set(0, 5, 10);
+                            viz.getViewer().followObject(sun, [0, -10, 5]);
+                        }
+
+                        // Update GUI to reflect the current state of all checkboxes
+                        planetFolder.updateDisplay();
+                        moonFolder.updateDisplay();
+                    });
+            });
+
+            planetFolder.open();
+
+            // Moons logic
+            const moonFolder = gui.addFolder("Moons");
+            const moonStates = {};
+
+            moonData.forEach((moon) => {
+                moonStates[moon.name] = false;
+            });
+
+            moonData.forEach((moon, index) => {
+                moonFolder
+                    .add(moonStates, moon.name)
+                    .name(moon.labelText)
+                    .onChange((value) => {
+                        if (value) {
+                            // Deselect all moons and planets when a new moon is selected
+                            Object.keys(planetStates).forEach((p) => (planetStates[p] = false));
+                            Object.keys(moonStates).forEach((m) => (moonStates[m] = false));
+
+                            // Only set the current moon to true
+                            moonStates[moon.name] = true;
+                            setSelectedPlanet(null);
+                            setSelectedMoon(moon.name);
+
+                            // Move the camera to the selected moon (existing logic)
+                            const viewer = viz.getViewer();
+                            const camera = viewer.camera;
+                            const currentJD = viz.getJd();
+                            const moonObject = Moons[index];
+                            const pos = moonObject.getPosition(currentJD);
+                            const zoomFactor = 0.0005; // Retrieve zoom factor for the moon
+
+                            if (pos) {
+                                // Apply zoom factor to the moon's position
+                                camera.position.set(pos[0] * zoomFactor, (pos[1] + 0.5) * zoomFactor, pos[2] * zoomFactor);
+                                viewer.followObject(moonObject, [pos[0] * zoomFactor, (pos[1] + 0.5) * zoomFactor, pos[2] * zoomFactor]);
+                                console.log(`Camera zoomed to moon: x=${pos[0] * zoomFactor}, y=${pos[1] * zoomFactor}, z=${pos[2] * zoomFactor}`);
+                            }
+                        } else {
+                            // If unchecked, reset camera to sun
+                            setSelectedMoon(null);
+                            const camera = viz.getViewer().camera;
+                            camera.position.set(0, 5, 10);
+                            viz.getViewer().followObject(sun, [0, -10, 5]);
+                        }
+
+                        // Update GUI to reflect the current state of all checkboxes
+                        planetFolder.updateDisplay();
+                        moonFolder.updateDisplay();
+                    });
+            });
+
+            moonFolder.open();
+
+            gui.open(); // Open the GUI
+        }
+    }, [timeSpeed, isPaused, selectedPlanet, isSidebarVisible, selectedMoon]); // Dependencies include cameraPos
+
+    useEffect(() => {
+        if (guiContainerRef.current) {
+            guiContainerRef.current.style.display = isSidebarVisible ? "block" : "none"; // Toggle sidebar visibility
+        }
+    }, [isSidebarVisible]);
+
+    // Handle time speed and pause logic
+    useEffect(() => {
+        if (vizRef.current) {
+            const simulation = vizRef.current;
+
+            // Set the JD (Julian Date) progression speed
+            simulation.setJdPerSecond(timeSpeed); // Controls time speed multiplier
+
+            if (isPaused) {
+                simulation.stop(); // Pauses the simulation
             } else {
-              // If unchecked, reset camera to sun
-              setSelectedPlanet(null);
-              const camera = viz.getViewer().camera;
-              camera.position.set(0, 5, 10);
-              viz.getViewer().followObject(sun, [0, -10, 5]);
+                simulation.start(); // Resumes the simulation
             }
-  
-            // Update GUI to reflect the current state of all checkboxes
-            planetFolder.updateDisplay();
-            moonFolder.updateDisplay();
-          });
-      });
-  
-      planetFolder.open();
-  
-      // Moons logic
-      const moonFolder = gui.addFolder('Moons');
-      const moonStates = {};
-  
-      moonData.forEach((moon) => {
-        moonStates[moon.name] = false;
-      });
-  
-      moonData.forEach((moon, index) => {
-        moonFolder.add(moonStates, moon.name)
-          .name(moon.labelText)
-          .onChange((value) => {
-            if (value) {
-              // Deselect all moons and planets when a new moon is selected
-              Object.keys(planetStates).forEach(p => planetStates[p] = false);
-              Object.keys(moonStates).forEach(m => moonStates[m] = false);
-  
-              // Only set the current moon to true
-              moonStates[moon.name] = true;
-              setSelectedPlanet(null);
-              setSelectedMoon(moon.name);
-  
-              // Move the camera to the selected moon (existing logic)
-              const viewer = viz.getViewer();
-              const camera = viewer.camera;
-              const currentJD = viz.getJd();
-              const moonObject = Moons[index];
-              const pos = moonObject.getPosition(currentJD);
-  
-              if (pos) {
-                camera.position.set(pos[0], pos[1] + 0.5, pos[2]);
-                viewer.followObject(moonObject, [pos[0], pos[1] + 0.5, pos[2]]);
-                console.log(`Camera moved to moon: x=${pos[0]}, y=${pos[1]}, z=${pos[2]}`);
-              }
-            } else {
-              // If unchecked, reset camera to sun
-              setSelectedMoon(null);
-              const camera = viz.getViewer().camera;
-              camera.position.set(0, 5, 10);
-              viz.getViewer().followObject(sun, [0, -10, 5]);
-            }
-  
-            // Update GUI to reflect the current state of all checkboxes
-            planetFolder.updateDisplay();
-            moonFolder.updateDisplay();
-          });
-      });
-      
-      moonFolder.open();
+        }
+    }, [timeSpeed, isPaused]);
 
-      gui.open(); // Open the GUI
-    }
-  }, [timeSpeed, isPaused,selectedPlanet,isSidebarVisible,selectedMoon]); // Dependencies include cameraPos
-
-  useEffect(() => {
-    if (guiContainerRef.current) {
-      guiContainerRef.current.style.display = isSidebarVisible ? 'block' : 'none'; // Toggle sidebar visibility
-    }
-  }, [isSidebarVisible]);
-
-  // Handle time speed and pause logic
-  useEffect(() => {
-    if (vizRef.current) {
-      const simulation = vizRef.current;
-
-      // Set the JD (Julian Date) progression speed
-      simulation.setJdPerSecond(timeSpeed); // Controls time speed multiplier
-
-      if (isPaused) {
-        simulation.stop(); // Pauses the simulation
-      } else {
-        simulation.start(); // Resumes the simulation
-      }
-    }
-  }, [timeSpeed, isPaused]);
-
-  return (
-    <div>
-      <button
-        className="toggle-sidebar-btn"
-        onClick={() => setSidebarVisible(!isSidebarVisible)}
-        style={{ marginTop: '20px', position: 'absolute', top: '40px', right: '10px', zIndex: '101' }}
-      >
-        {isSidebarVisible ? 'Hide Sidebar' : 'Show Sidebar'}
-      </button>
-      <div id="main-container"></div>
-      <div className="time-control">
-        <label htmlFor="timeSpeed">Time Speed: </label>
-        <input
-          id="timeSpeed"
-          type="range"
-          min="1"
-          max="10"
-          step="1"
-          value={timeSpeed}
-          onChange={(e) => setTimeSpeed(Number(e.target.value))}
-        />
-        <span>{timeSpeed}x</span>
-        <button onClick={() => setIsPaused(!isPaused)} style={{ marginLeft: "5px" }}>
-          {isPaused ? 'Resume' : 'Pause'}
-        </button>
-      </div>
-    </div>
-  );
+    return (
+        <div>
+            <button
+                className="toggle-sidebar-btn"
+                onClick={() => setSidebarVisible(!isSidebarVisible)}
+                style={{ marginTop: "20px", position: "absolute", top: "40px", right: "10px", zIndex: "101" }}
+            >
+                {isSidebarVisible ? "Hide Sidebar" : "Show Sidebar"}
+            </button>
+            <div id="main-container"></div>
+            <div className="time-control">
+                <label htmlFor="timeSpeed">Time Speed: </label>
+                <input id="timeSpeed" type="range" min="1" max="10" step="1" value={timeSpeed} onChange={(e) => setTimeSpeed(Number(e.target.value))} />
+                <span>{timeSpeed}x</span>
+                <button onClick={() => setIsPaused(!isPaused)} style={{ marginLeft: "5px" }}>
+                    {isPaused ? "Resume" : "Pause"}
+                </button>
+            </div>
+        </div>
+    );
 };
 
 export default SolarSystem;
