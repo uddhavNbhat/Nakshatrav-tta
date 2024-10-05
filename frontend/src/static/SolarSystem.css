@@ -36,4 +36,21 @@ html,body,#main-container {
     margin-right: 10px;
   } 
 
-  
+  .sidebar {
+    margin-top: 55px;
+    height: 100vh; /* Full height */
+    overflow-y: auto; /* Scroll if needed */
+  }
+
+  .toggle-sidebar-btn {
+    background-color: #007bff;
+    color: white;
+    border: none;
+    padding: 10px 15px;
+    border-radius: 5px;
+    cursor: pointer;
+    z-index: 101; // Ensure it appears above the sidebar
+  }
+  .toggle-sidebar-btn:hover {
+    background-color: #0056b3; // Darken the button on hover
+  }
