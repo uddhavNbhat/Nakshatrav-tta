@@ -208,81 +208,94 @@ const SolarSystem = () => {
       planetData.forEach((planet) => {
         planetStates[planet.name] = false; // Initialize all planets as unchecked
       });
-
-      // Wrap each planet in the GUI to trigger zoom and display name
+  
       planetData.forEach((planet, index) => {
         planetFolder.add(planetStates, planet.name)
           .name(planet.name)
           .onChange((value) => {
-            const viewer = viz.getViewer();
-            const camera = viz.getViewer().camera;
             if (value) {
-              // If a planet is selected, set the selected planet state
+              // Deselect all planets and moons when a new planet is selected
+              Object.keys(planetStates).forEach(p => planetStates[p] = false);
+              Object.keys(moonStates).forEach(m => moonStates[m] = false);
+  
+              // Only set the current planet to true
+              planetStates[planet.name] = true;
               setSelectedPlanet(planet.name);
               setSelectedMoon(null); // Reset moon selection
-
-              // Get the current JD from the simulation
-              const currentJD = viz.getJd(); // Retrieve the current Julian Date
-
-              // Get the planet object directly
+  
+              // Move the camera to the selected planet (existing logic)
+              const viewer = viz.getViewer();
+              const camera = viz.getViewer().camera;
+              const currentJD = viz.getJd();
               const planetObject = planets[index];
-
-              // Use the getPosition method with the current JD
-              const pos = planetObject.getPosition(currentJD); // Pass the current JD
-
+              const pos = planetObject.getPosition(currentJD);
+  
               if (pos) {
                 camera.position.set(pos[0], pos[1] + 0.5, pos[2]);
                 viewer.followObject(planetObject, [pos[0], pos[1] + 0.5, pos[2]]);
                 console.log(`Camera moved to: x=${pos[0]}, y=${pos[1]}, z=${pos[2]}`);
-              } else {
-                console.error(`Position for ${planet.name} is undefined.`);
               }
             } else {
-              // If this button was unchecked, clear the selection
+              // If unchecked, reset camera to sun
               setSelectedPlanet(null);
-              camera.position.set(0, 5, 10); // Move the camera back to the sun's position
-              viewer.followObject(sun, [0, -10, 5]);
-              console.log(`Camera moved back to the sun: x=0, y=0, z=0`);
+              const camera = viz.getViewer().camera;
+              camera.position.set(0, 5, 10);
+              viz.getViewer().followObject(sun, [0, -10, 5]);
             }
+  
+            // Update GUI to reflect the current state of all checkboxes
+            planetFolder.updateDisplay();
+            moonFolder.updateDisplay();
           });
       });
-
+  
       planetFolder.open();
-
+  
+      // Moons logic
       const moonFolder = gui.addFolder('Moons');
       const moonStates = {};
-
+  
       moonData.forEach((moon) => {
-        moonStates[moon.name] = false; // Initialize all moons as unchecked
+        moonStates[moon.name] = false;
       });
-
-      moonData.forEach((moon,index) => {
-        moonStates[moon.name] = false; // Initialize moon states
+  
+      moonData.forEach((moon, index) => {
         moonFolder.add(moonStates, moon.name)
           .name(moon.labelText)
           .onChange((value) => {
-            const viewer = viz.getViewer();
-            const camera = viewer.camera;
-      
             if (value) {
+              // Deselect all moons and planets when a new moon is selected
+              Object.keys(planetStates).forEach(p => planetStates[p] = false);
+              Object.keys(moonStates).forEach(m => moonStates[m] = false);
+  
+              // Only set the current moon to true
+              moonStates[moon.name] = true;
               setSelectedPlanet(null);
               setSelectedMoon(moon.name);
-      
+  
+              // Move the camera to the selected moon (existing logic)
+              const viewer = viz.getViewer();
+              const camera = viewer.camera;
               const currentJD = viz.getJd();
-              const moonObject = Moons[index]
+              const moonObject = Moons[index];
               const pos = moonObject.getPosition(currentJD);
-      
+  
               if (pos) {
                 camera.position.set(pos[0], pos[1] + 0.5, pos[2]);
                 viewer.followObject(moonObject, [pos[0], pos[1] + 0.5, pos[2]]);
-              } else {
-                console.error(`Position for ${moon.name} is undefined.`);
+                console.log(`Camera moved to moon: x=${pos[0]}, y=${pos[1]}, z=${pos[2]}`);
               }
             } else {
+              // If unchecked, reset camera to sun
               setSelectedMoon(null);
+              const camera = viz.getViewer().camera;
               camera.position.set(0, 5, 10);
-              viewer.followObject(sun, [0, -10, 5]);
+              viz.getViewer().followObject(sun, [0, -10, 5]);
             }
+  
+            // Update GUI to reflect the current state of all checkboxes
+            planetFolder.updateDisplay();
+            moonFolder.updateDisplay();
           });
       });
       
