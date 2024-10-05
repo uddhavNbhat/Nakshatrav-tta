@@ -1,6 +1,7 @@
 import './App.css'
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Index from "./components/Index.jsx";
+import Quiz from "./components/Quiz.jsx"
 
 function App() {
 
@@ -8,6 +9,7 @@ function App() {
     <BrowserRouter>
       <Routes>
         <Route path='/' element={<Index/>} />
+        <Route path='/quiz' element = {<Quiz/>}/>
       </Routes>
     </BrowserRouter>
   )

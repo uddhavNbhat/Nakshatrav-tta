@@ -162,8 +162,8 @@ const SolarSystem = () => {
       
         // Add moons for planets like Earth
         if (moons) {
-          moons.forEach(({ name, textureUrl, labelText, radius, ephem, particleSize }) => {
-            const moon = viz.createObject(name, {
+          moonData.forEach(({ name, textureUrl, labelText, radius, ephem, particleSize }) => {
+            const moon = viz.createSphere(name, {
               textureUrl,
               labelText,
               radius,
@@ -174,7 +174,7 @@ const SolarSystem = () => {
             Moons.push(moon);
           });
         }
-        
+      
       
         planets.push(planet); // Store planet instances
       });

@@ -49,8 +49,12 @@ html,body,#main-container {
     padding: 10px 15px;
     border-radius: 5px;
     cursor: pointer;
-    z-index: 101; // Ensure it appears above the sidebar
+    z-index: 101;
   }
   .toggle-sidebar-btn:hover {
-    background-color: #0056b3; // Darken the button on hover
+    background-color: #0056b3;
+  }
+
+  .dg .close-button {
+    display: none !important;
   }
