@@ -19,22 +19,22 @@ html,body,#main-container {
   .time-control {
     position: absolute;
     bottom: 10px;
-    left: 50%;
-    transform: translateX(-50%);
+    right: 10px;
+    transform: none;
     background-color: rgba(255, 255, 255, 0.8);
     padding: 10px;
     border-radius: 5px;
     display: flex;
     align-items: center;
-  }
-  
-  .time-control label {
+}
+
+.time-control label {
     margin-right: 10px;
-  }
-  
-  .time-control input {
+}
+
+.time-control input {
     margin-right: 10px;
-  } 
+}
 
   .sidebar {
     margin-top: 55px;
@@ -63,4 +63,34 @@ html,body,#main-container {
 
   .dg .close-button {
     display: none !important;
+  }
+
+
+  .planet-info-card {
+    position: absolute;
+    top: 60px;
+    left: 20px;
+    width: 250px;
+    background-color: white;
+    padding: 15px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    border-radius: 8px;
+    z-index: 100; /* Make sure it appears above other elements */
+  }
+  
+  .planet-info-card h2 {
+    margin-top: 0;
+  }
+  
+  .planet-info-card ul {
+    list-style-type: none;
+    padding-left: 0;
+  }
+  
+  .planet-info-card ul li {
+    margin-bottom: 10px;
+  }
+  
+  .planet-info-card ul li strong {
+    font-weight: 600;
   }
