@@ -1,0 +1,31 @@
+.jumbotron {
+    background-image: url('./Image/background.jpg');
+    background-size: cover;
+    background-position: center;
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    color: #fff;
+    margin: 0;
+}
+
+.header {
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+.orrery {
+    text-align: center;
+}
+.text-wrapper {
+    background-color: rgba(0, 0, 0, 0.5); /* Transparent black background */
+    padding: 20px; /* Adds space around the text */
+    border-radius: 10px; /* Optional: Gives rounded corners to the wrapper */
+    display: inline-block; /* Ensures the wrapper only covers the text */
+}
+
+.display-4, .lead {
+    font-weight: bold; /* Makes the text bold */
+}

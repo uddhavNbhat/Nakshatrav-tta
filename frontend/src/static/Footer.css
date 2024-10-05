@@ -1,0 +1,21 @@
+.footerContainer {
+    background-color: rgba(43, 61, 79, 0.58); /* Equivalent to #2b3d4f58 */
+    padding: 10px 0;
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    border-top: 1px solid #ddd;
+    width: 100%; /* Ensure it takes the full width of the page */
+}
+
+.section {
+    text-align: center;
+    flex: 1; /* Allow sections to take equal width */
+}
+
+.socialIcons {
+    display: flex;
+    justify-content: center; /* Center the icons */
+    gap: 10px;
+    font-size: 1.5em; /* Slightly increase icon size for better visibility */
+}
