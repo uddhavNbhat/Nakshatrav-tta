@@ -1,64 +1,31 @@
 import { useState, useEffect } from 'react';
+import Nav from './Navbar/Nav';
+import "bootstrap/dist/css/bootstrap.min.css";
+import "bootstrap/dist/js/bootstrap.bundle.min";
+import quizData from '../quizdata/QuizData';
 
 const Quiz = () => {
-  const [questions, setQuestions] = useState([
-    {
-      question: "What is the largest planet in our solar system?",
-      options: ["Earth", "Mars", "Jupiter", "Saturn"],
-      correctAnswer: 2,
-    },
-    {
-      question: "What is the closest planet to the Sun?",
-      options: ["Mercury", "Venus", "Earth", "Mars"],
-      correctAnswer: 0,
-    },
-    {
-      question: "Which planet is known as the Red Planet?",
-      options: ["Earth", "Mars", "Jupiter", "Saturn"],
-      correctAnswer: 1,
-    },
-    {
-      question: "What is the name of the galaxy we live in?",
-      options: ["Andromeda", "Milky Way", "Whirlpool", "Sombrero"],
-      correctAnswer: 1,
-    },
-    {
-      question: "What is the smallest planet in our solar system?",
-      options: ["Mercury", "Venus", "Earth", "Mars"],
-      correctAnswer: 0,
-    },
-    {
-      question: "Which planet is known for its rings?",
-      options: ["Earth", "Mars", "Jupiter", "Saturn"],
-      correctAnswer: 3,
-    },
-    {
-      question: "What is the hottest planet in our solar system?",
-      options: ["Mercury", "Venus", "Earth", "Mars"],
-      correctAnswer: 1,
-    },
-    {
-      question: "Which planet is known as the Earth's twin?",
-      options: ["Mercury", "Venus", "Mars", "Jupiter"],
-      correctAnswer: 1,
-    },
-    {
-      question: "What is the name of the 2nd largest planet in our solar system?",
-      options: ["Earth", "Mars", "Jupiter", "Saturn"],
-      correctAnswer: 3,
-    },
-    {
-      question: "Which planet has the most moons?",
-      options: ["Earth", "Mars", "Jupiter", "Saturn"],
-      correctAnswer: 2,
-    },
-  ]);
+  const [categories, setCategories] = useState({
+    planets: { easy: [], medium: [], hard: [] },
+    moons: { easy: [], medium: [], hard: [] },
+    suns: { easy: [], medium: [], hard: [] },
+    satellites: { easy: [], medium: [], hard: [] },
+    asteroids: { easy: [], medium: [], hard: [] },
+    comets: { easy: [], medium: [], hard: [] },
+  });
 
+  const [questions, setQuestions] = useState([]);
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
   const [selectedAnswers, setSelectedAnswers] = useState(Array(10).fill(null));
   const [score, setScore] = useState(0);
   const [timer, setTimer] = useState(0);
   const [quizStarted, setQuizStarted] = useState(false);
+  const [selectedCategory, setSelectedCategory] = useState(null);
+
+
+  useEffect(() => {
+    setCategories(quizData);
+  }, []);
 
   useEffect(() => {
     let interval;
@@ -70,7 +37,9 @@ const Quiz = () => {
     return () => clearInterval(interval);
   }, [quizStarted]);
 
-  const startQuiz = () => {
+  const startQuiz = (category, difficulty) => {
+    setSelectedCategory({ category, difficulty });
+    setQuestions(categories[category][difficulty]);
     setQuizStarted(true);
     setTimer(0);
   };
@@ -93,43 +62,79 @@ const Quiz = () => {
   };
 
   return (
-    <div>
-      {!quizStarted ? (
-        <button onClick={startQuiz}>Start Quiz</button>
-      ) : (
+    <div className="container mt-5">
+      <div className="navbar" style={{ marginBottom: "40px" }}>
+        <Nav />
+      </div>
+
+      {/* Display category cards if quiz hasn't started */}
+      {!quizStarted && !selectedCategory && (
+        <div className="row">
+          {Object.keys(categories).map((category) => (
+            <div className="col-md-4" key={category}>
+              <div className="card mb-4">
+                <div className="card-body text-center">
+                  <h5 className="card-title text-capitalize">{category}</h5>
+                  <div className="d-flex justify-content-around">
+                    <button className="btn btn-outline-primary" onClick={() => startQuiz(category, "easy")}>Easy</button>
+                    <button className="btn btn-outline-warning" onClick={() => startQuiz(category, "medium")}>Medium</button>
+                    <button className="btn btn-outline-danger" onClick={() => startQuiz(category, "hard")}>Hard</button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          ))}
+        </div>
+      )}
+
+      {/* Quiz section */}
+      {quizStarted && selectedCategory && (
         <div>
-          <div>Timer: {timer}s</div>
-          <div>
+          <div className="d-flex justify-content-between align-items-center">
             <h2>{questions[currentQuestionIndex].question}</h2>
+            <div>Timer: {timer}s</div>
+          </div>
+
+          <div className="mt-3">
             {questions[currentQuestionIndex].options.map((option, index) => (
               <button
                 key={index}
                 onClick={() => handleAnswerSelect(index)}
-                style={{
-                  backgroundColor:
-                    selectedAnswers[currentQuestionIndex] === index
-                      ? index === questions[currentQuestionIndex].correctAnswer
-                        ? 'green'
-                        : 'red'
-                      : 'white',
-                }}
+                className={`btn btn-block mb-2 ${
+                  selectedAnswers[currentQuestionIndex] === index
+                    ? index === questions[currentQuestionIndex].correctAnswer
+                      ? 'btn-success'
+                      : 'btn-danger'
+                    : 'btn-outline-primary'
+                }`}
               >
                 {option}
               </button>
             ))}
           </div>
-          <button
-            onClick={() =>
-              setCurrentQuestionIndex((prevIndex) => prevIndex + 1)
-            }
-            disabled={currentQuestionIndex >= questions.length - 1}
-          >
-            Next Question
-          </button>
-          <button onClick={handleSubmit}>Submit Test</button>
+
+          <div className="mt-4 d-flex justify-content-between">
+            <button
+              className="btn btn-secondary"
+              onClick={() => setCurrentQuestionIndex((prevIndex) => prevIndex + 1)}
+              disabled={currentQuestionIndex >= questions.length - 1}
+            >
+              Next Question
+            </button>
+            <button className="btn btn-primary" onClick={handleSubmit}>
+              Submit Test
+            </button>
+          </div>
         </div>
       )}
-      {!quizStarted && score !== 0 && <div>Your score: {score}</div>}
+
+      {/* Score display */}
+      {!quizStarted && score !== 0 && (
+        <div>
+          <div className="alert alert-info mt-4">Your score: {score}</div>
+          <div className="alert alert-info mt-4">Time Taken: {timer} seconds</div>
+        </div>
+      )}
     </div>
   );
 };
