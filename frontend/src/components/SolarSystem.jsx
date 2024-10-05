@@ -191,7 +191,7 @@ const SolarSystem = () => {
       guiContainer.classList.add('sidebar');
       guiContainer.style.position = 'absolute';
       guiContainer.style.top = '60px'; // Adjust this to match your navbar height
-      guiContainer.style.left = '0';
+      guiContainer.style.right = '0';
       guiContainer.style.height = 'calc(100% - 60px)'; // Full height minus navbar
       guiContainer.style.width = '250px'; // Width of the sidebar
       guiContainer.style.zIndex = '100'; // Ensure it's on top
@@ -319,7 +319,7 @@ const SolarSystem = () => {
       <button
         className="toggle-sidebar-btn"
         onClick={() => setSidebarVisible(!isSidebarVisible)}
-        style={{ marginTop: '20px', position: 'absolute', top: '40px', left: '10px', zIndex: '101' }}
+        style={{ marginTop: '20px', position: 'absolute', top: '40px', right: '10px', zIndex: '101' }}
       >
         {isSidebarVisible ? 'Hide Sidebar' : 'Show Sidebar'}
       </button>

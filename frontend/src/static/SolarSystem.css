@@ -40,6 +40,7 @@ html,body,#main-container {
     margin-top: 55px;
     height: 100vh; /* Full height */
     overflow-y: auto; /* Scroll if needed */
+    
   }
 
   .toggle-sidebar-btn {
@@ -50,9 +51,14 @@ html,body,#main-container {
     border-radius: 5px;
     cursor: pointer;
     z-index: 101;
+    width: 235px;
   }
   .toggle-sidebar-btn:hover {
     background-color: #0056b3;
+  }
+
+  .dg{
+
   }
 
   .dg .close-button {

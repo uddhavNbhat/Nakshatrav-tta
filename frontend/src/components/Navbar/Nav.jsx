@@ -15,6 +15,7 @@ function Nav({ user, handleLogout }) {
                         width="30"
                         height="24"
                         className="d-inline-block align-text-top"
+                        style={{ marginTop: '3px' }}
                     />
                     Nasa Space Apps
                 </a>
