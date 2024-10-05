@@ -39,6 +39,9 @@ function Nav() { // Make sure to pass user and handleLogout as props
                             <Link className="nav-link" to="/">Home</Link>
                         </li>
                         <li className="nav-item">
+                            <Link className="nav-link" to="/solar">Solar System</Link>
+                        </li>
+                        <li className="nav-item">
                             <Link className="nav-link" to="#">Learning Section</Link>
                         </li>
                         <li className="nav-item">

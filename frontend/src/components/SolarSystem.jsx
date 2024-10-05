@@ -128,7 +128,7 @@ const SolarSystem = () => {
           om: 1.136154964073247e2,
           w: 3.394422648650336e2,
           ma: 1.870970898012944e2,
-          }, 'deg') },
+          }, 'deg'), rings : true},
         { name: 'uranus', textureUrl: '/textures/uranus.jpg', labelText: 'Uranus', radius: 0.025362, ephem: new Spacekit.Ephem({
           epoch: 2458426.5,
           a: 1.914496966635462e1,
@@ -151,7 +151,7 @@ const SolarSystem = () => {
 
       const planets = [];
       const Moons = [];
-      planetData.forEach(({ name, textureUrl, labelText, radius, ephem, moons }) => {
+      planetData.forEach(({ name, textureUrl, labelText, radius, ephem, moons, rings}) => {
         const planet = viz.createSphere(name, {
           textureUrl,
           radius,
@@ -173,6 +173,13 @@ const SolarSystem = () => {
             moon.orbitAround(planet); // Make the moon orbit the planet
             Moons.push(moon);
           });
+        }
+
+        if (rings) {
+          const currentJD = viz.getJd();
+          const pos = planet.getPosition(currentJD);
+          viz.createLight(pos);
+          planet.addRings(12427000.580913, 28047800.924731,'../textures/saturn_rings_top.png')
         }
       
       
