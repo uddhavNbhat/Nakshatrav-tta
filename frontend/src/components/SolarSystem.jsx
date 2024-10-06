@@ -498,9 +498,6 @@ const SolarSystem = () => {
                 }
             });
         });
-
-
-
             gui.open(); // Open the GUI
             return()=>{
                 document.body.style.overflow = "auto";
@@ -543,9 +540,9 @@ const SolarSystem = () => {
             <div id="main-container"></div>
             <div className="time-control">
                 <label htmlFor="timeSpeed">Time Speed: </label>
-                <input id="timeSpeed" type="range" min="1" max="10" step="1" value={timeSpeed} onChange={(e) => setTimeSpeed(Number(e.target.value))} />
+                <input id="timeSpeed" type="range" className="form-range me-2" min="1" max="10" step="1" value={timeSpeed} onChange={(e) => setTimeSpeed(Number(e.target.value))} />
                 <span>{timeSpeed}x</span>
-                <button onClick={() => setIsPaused(!isPaused)} style={{ marginLeft: "5px" }}>
+                <button className="btn btn-primary" onClick={() => setIsPaused(!isPaused)} style={{ marginLeft: "5px" }}>
                     {isPaused ? "Resume" : "Pause"}
                 </button>
             </div>
