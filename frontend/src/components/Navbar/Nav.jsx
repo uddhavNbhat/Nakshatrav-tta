@@ -54,9 +54,6 @@ function Nav() { // Make sure to pass user and handleLogout as props
                                 <li>
                                     <Link className="dropdown-item" to="/learning/comet">Comets</Link>
                                 </li>
-                                <li>
-                                    <Link className="dropdown-item" to="/satellites">Satellites</Link>
-                                </li>
                             </ul>
                         </li>
                         <li className="nav-item">

@@ -5,7 +5,8 @@ import "bootstrap/dist/js/bootstrap.bundle.min";
 import * as dat from "dat.gui";
 import "bootstrap/dist/css/bootstrap.min.css";
 import gsap from "gsap";
-
+const totalComets = 54; // Define total comets you want to display
+import jsonData from "./Learning/Data/Coordinate";
 
 const SolarSystem = () => {
     const vizRef = useRef(null); // Create a ref to store the simulation instance
@@ -14,7 +15,21 @@ const SolarSystem = () => {
     const [selectedPlanet, setSelectedPlanet] = useState(null);
     const [isSidebarVisible, setSidebarVisible] = useState(true);
     const [selectedMoon, setSelectedMoon] = useState(null);
+    const [selectedComet, setSelectedComet] = useState(null);
     const guiContainerRef = useRef(null);
+
+    const cometObjects = jsonData.map(comet => ({
+        ...comet,
+        e: parseFloat(comet.e),
+        i_deg: parseFloat(comet.i_deg),
+        w_deg: parseFloat(comet.w_deg),
+        node_deg: parseFloat(comet.node_deg),
+        q_au_1: parseFloat(comet.q_au_1),
+        q_au_2: parseFloat(comet.q_au_2),
+        p_yr: parseFloat(comet.p_yr),
+        moid_au: parseFloat(comet.moid_au),
+    }));
+
 
     useEffect(() => {
         document.body.style.overflow = "hidden";
@@ -284,10 +299,10 @@ const SolarSystem = () => {
             guiContainer.style.top = "60px"; // Adjust this to match your navbar height
             guiContainer.style.right = "12px";
             guiContainer.style.height = "calc(100% - 60px)"; // Full height minus navbar
-            guiContainer.style.width = "130px"; // Width of the sidebar
+            guiContainer.style.width = "160px"; // Width of the sidebar
             guiContainer.style.zIndex = "100"; // Ensure it's on top
             guiContainer.style.display = isSidebarVisible ? "block" : "none";
-            
+
 
             // Append the GUI to the sidebar
             guiContainer.appendChild(gui.domElement);
@@ -361,7 +376,6 @@ const SolarSystem = () => {
                 });
             });
 
-            planetFolder.open();
 
             // Moons logic
             const moonFolder = gui.addFolder("Moons");
@@ -429,7 +443,63 @@ const SolarSystem = () => {
                 });
             });
 
-            moonFolder.open();
+
+            const cometFolder = gui.addFolder("Comets");
+            const cometStates = {};
+            const cometObjectsMap = {}; // Map to store comet objects for easy access
+
+            cometObjects.slice(0, totalComets).forEach((comet) => {
+            cometStates[comet.object_name] = false; // Use object_name for state
+            cometFolder
+                .add(cometStates, comet.object_name)
+                .name(comet.object_name)
+                .onChange((value) => {
+                    if (value) {
+                    setSelectedComet(comet.object_name);
+
+                    // Define the ephemeris for the comet
+                    const ephem = new Spacekit.Ephem(
+                        {
+                            epoch: comet.epoch_tdb,
+                            a: (comet.q_au_1 + comet.q_au_2) / 2,
+                            e: comet.e,
+                            i: comet.i_deg,
+                            om: comet.node_deg,
+                            w: comet.w_deg,
+                            ma: 0,
+                        },
+                        'deg'
+                    );
+
+                    // Create the comet object
+                    const cometObj = viz.createObject(comet.object_name, {
+                        ephem,
+                        ecliptic: {
+                            displayLines: true,
+                            lineColor: 0x333333,
+                        },
+                        labelText: comet.object_name,
+                    });
+
+                    // Store the created comet object in the map
+                    cometObjectsMap[comet.object_name] = cometObj;
+
+                    // Optionally zoom to fit the comet in the view
+                    viz.zoomToFit(cometObj);
+                } else {
+                    setSelectedComet(null);
+
+                    // Logic to remove the comet object if necessary
+                    if (cometObjectsMap[comet.object_name]) {
+                        // Assuming your viz object has a method to remove objects
+                        viz.removeObject(cometObjectsMap[comet.object_name]);
+                        delete cometObjectsMap[comet.object_name]; // Clean up the map
+                    }
+                }
+            });
+        });
+
+
 
             gui.open(); // Open the GUI
             return()=>{
@@ -437,7 +507,7 @@ const SolarSystem = () => {
 
             }
         }
-    }, [timeSpeed, isPaused, selectedPlanet, isSidebarVisible, selectedMoon]); // Dependencies include cameraPos
+    }, [timeSpeed, isPaused, selectedPlanet, isSidebarVisible, selectedMoon,cometObjects]); // Dependencies include cameraPos
 
     useEffect(() => {
         if (guiContainerRef.current) {
