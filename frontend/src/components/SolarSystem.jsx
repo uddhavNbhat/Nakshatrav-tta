@@ -190,6 +190,9 @@ const SolarSystem = () => {
                         "deg"
                     ),
                     rings: true,
+                    inner: 12427000.580913,
+                    outer:28047800.924731,
+                    ringtexture: "../textures/saturn_rings_top.png"
                 },
                 {
                     name: "uranus",
@@ -231,7 +234,7 @@ const SolarSystem = () => {
 
             const planets = [];
             const Moons = [];
-            planetData.forEach(({ name, textureUrl, labelText, radius, ephem, moons, rings }) => {
+            planetData.forEach(({ name, textureUrl, labelText, radius, ephem, moons, rings, ringtexture,inner,outer }) => {
                 const planet = viz.createSphere(name, {
                     textureUrl,
                     radius,
@@ -259,7 +262,7 @@ const SolarSystem = () => {
                     const currentJD = viz.getJd();
                     const pos = planet.getPosition(currentJD);
                     viz.createLight(pos);
-                    planet.addRings(12427000.580913, 28047800.924731, "../textures/saturn_rings_top.png");
+                    planet.addRings(inner, outer, ringtexture);
                 }
 
                 planets.push(planet); // Store planet instances
