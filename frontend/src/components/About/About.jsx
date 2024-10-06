@@ -70,56 +70,56 @@ const About = () => {
                 <div className="card">
                     <div id="card-one" style={{ width: '600px', height: '300px' }}></div>
                     <div className="card-body">
-                        <h3 className="card-title" style={{color:"white"}}>Mercury</h3>
+                        <h3 className="card-title">Mercury</h3>
                     </div>
                 </div>
 
                 <div className="card">
                     <div id="card-two" style={{ width: '600px', height: '300px' }}></div>
                     <div className="card-body">
-                        <h3 className="card-title" style={{color:"white"}}>Venus</h3>
+                        <h3 className="card-title">Venus</h3>
                     </div>
                 </div>
 
                 <div className="card">
                     <div id="card-three" style={{ width: '600px', height: '300px' }}></div>
                     <div className="card-body">
-                        <h3 className="card-title" style={{color:"white"}}>Earth</h3>
+                        <h3 className="card-title">Earth</h3>
                     </div>
                 </div>
 
                 <div className="card">
                     <div id="card-four" style={{ width: '600px', height: '300px' }}></div>
                     <div className="card-body">
-                        <h3 className="card-title" style={{color:"white"}}>Mars</h3>
+                        <h3 className="card-title">Mars</h3>
                     </div>
                 </div>
 
                 <div className="card">
                     <div id="card-five" style={{ width: '600px', height: '300px' }}></div>
                     <div className="card-body">
-                        <h3 className="card-title" style={{color:"white"}}>Jupiter</h3>
+                        <h3 className="card-title">Jupiter</h3>
                     </div>
                 </div>
 
                 <div className="card">
                     <div id="card-six" style={{ width: '600px', height: '300px' }}></div>
                     <div className="card-body">
-                        <h3 className="card-title" style={{color:"white"}}>Saturn</h3>
+                        <h3 className="card-title">Saturn</h3>
                     </div>
                 </div>
 
                 <div className="card">
                     <div id="card-seven" style={{ width: '600px', height: '300px' }}></div>
                     <div className="card-body">
-                        <h3 className="card-title" style={{color:"white"}}>Uranus</h3>
+                        <h3 className="card-title">Uranus</h3>
                     </div>
                 </div>
 
                 <div className="card">
                     <div id="card-eight" style={{ width: '600px', height: '300px' }}></div>
                     <div className="card-body">
-                        <h3 className="card-title" style={{color:"white"}}>Neptune</h3>
+                        <h3 className="card-title">Neptune</h3>
                     </div>
                 </div>
 
