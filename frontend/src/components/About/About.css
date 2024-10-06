@@ -2,8 +2,10 @@
     display: flex;
     justify-content: space-around; /* Distributes cards with equal space */
     flex-wrap: wrap; /* Ensures cards wrap if the screen is too small */
-    gap: 20px; /* Adds space between cards */
+    gap: 30px; /* Adds space between cards */
     padding: 20px;
+    margin: 0 auto;
+    margin-bottom: 30px;
 }
 
 .card_container .card {
@@ -12,7 +14,7 @@
     overflow: hidden;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Initial box shadow */
     transition: transform 0.3s ease, box-shadow 0.3s ease; /* Smooth transition for hover effect */
-    width: 400px; /* Fixed width for the cards */
+    width: 600px; /* Fixed width for the cards */
     text-align: center; /* Centers the text */
 }
 
@@ -27,7 +29,7 @@
 
 .card-title {
     font-size: 1.2rem;
-    color: #333;
+    color: #ffffff;
     margin-top: 10px;
 }
 
@@ -35,4 +37,7 @@ h2 {
     text-align: center;
     margin-bottom: 30px;
     color: #333;
+    margin-top: 30px;
+    font-weight: bold;
+    font-size: 50px;
 }

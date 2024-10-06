@@ -1,39 +1,99 @@
+/* General Body and Main Container */
 body, html {
     margin: 0;
     padding: 0;
     width: 100%;
+    height: 100%;
     overflow: hidden;
+    font-family: 'Helvetica Neue', Arial, sans-serif;
 }
 
 .main-container {
-    background-image: url('../../static/Image/background.jpg');
-    background-size: cover;
-    background-position: center;
-    background-repeat: no-repeat;
-    overflow: hidden;
+    position: relative;
     height: 100vh;
     display: flex;
     flex-direction: column;
     justify-content: center;
     align-items: center;
     color: #fff;
+    overflow: hidden;
+    background-color: none;
 }
 
+.background-video {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover; /* Ensures the video covers the container */
+    z-index: -1; /* Sends the video behind the content */
+}
+
+/* Header container for centering */
 .header {
+    display: flex;
+    flex-direction: column;
+    align-items: center; /* Ensures content is centered horizontally */
+    justify-content: center;
     text-align: center;
     margin-bottom: 20px;
+    width: 100%;
+    padding: 0 20px; /* Optional: adds padding for smaller screens */
 }
 
-.orrery {
-    text-align: center;
+/* Main heading styles */
+.main-heading {
+    font-size: 4rem; /* Large but clean font size */
+    font-weight: 700; /* Bold for impact */
+    letter-spacing: 1.5px; /* Adds some space between characters */
+    text-transform: uppercase; /* Makes the title stand out more */
+    margin: 30 0 20px 0; /* Adds space below the heading */
+    color: #f7f7f7; /* Slightly off-white for a softer appearance */
+    text-shadow: 2px 2px 6px rgba(0, 0, 0, 0.8); /* Adds depth */
+    max-width: 100%; /* Ensure it does not overflow */
 }
+
+/* Sub-heading (description) styles */
+.sub-heading {
+    font-size: 2rem; /* Smaller, subtle sub-heading */
+    font-weight: 400; /* Lighter weight for contrast */
+    margin: 0;
+    color: #d1d1d1; /* Lighter gray for a cleaner look */
+    text-shadow: 1px 1px 4px rgba(0, 0, 0, 0.7); /* Subtle shadow */
+    max-width: 800px; /* Limits the width for better readability */
+    line-height: 1.6; /* Improves readability */
+    text-align: center; /* Center text horizontally */
+}
+
+/* Text wrapper for background styling */
 .text-wrapper {
-    background-color: rgba(0, 0, 0, 0.5); /* Transparent black background */
-    padding: 20px; /* Adds space around the text */
-    border-radius: 10px; /* Optional: Gives rounded corners to the wrapper */
-    display: inline-block; /* Ensures the wrapper only covers the text */
+    padding: 20px 40px; /* Generous padding for better text spacing */
+    border-radius: 12px; /* Smooth rounded corners */
+    margin-bottom: 20px; /* Add some spacing between text blocks */
+    transition: transform 0.3s ease; /* Smooth transition for any future animations */
+    display: flex; /* Flexbox for centering content */
+    justify-content: center; /* Center horizontally */
+    width: 100%; /* Ensure wrapper takes up full width */
 }
 
-.display-4, .lead {
-    font-weight: bold; /* Makes the text bold */
+/* Optional hover effect for text box */
+.text-wrapper:hover {
+    transform: translateY(-5px); /* Slight upward movement on hover */
 }
+
+/* Responsive design for smaller screens */
+@media (max-width: 768px) {
+    .main-heading {
+        font-size: 2.5rem;
+    }
+
+    .sub-heading {
+        font-size: 1.2rem;
+    }
+
+    .text-wrapper {
+        padding: 15px 25px;
+    }
+}
+
