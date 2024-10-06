@@ -45,3 +45,8 @@ body {
     color: black; /* Change text color */
     font-size: 1rem; /* Set font size for the text */
 }
+
+.card-title {
+    color: black; /* Change title color */
+    font-size: 1.5rem; /* Set font size for the title */
+}
