@@ -3,17 +3,37 @@ import Nav from "../Navbar/Nav";
 import "bootstrap/dist/css/bootstrap.min.css";
 import "bootstrap/dist/js/bootstrap.bundle.min";
 import quizData from "./QuizData.jsx";
-import './Quiz.css'
+import "./Quiz.css";
 
 const Quiz = () => {
     const [categories, setCategories] = useState({
-        planets: { easy: [], medium: [], hard: [] },
-        moons: { easy: [], medium: [], hard: [] },
-        suns: { easy: [], medium: [], hard: [] },
-        satellites: { easy: [], medium: [], hard: [] },
-        asteroids: { easy: [], medium: [], hard: [] },
-        comets: { easy: [], medium: [], hard: [] },
+        Planets: { easy: [], medium: [], hard: [] },
+        Moons: { easy: [], medium: [], hard: [] },
+        Suns: { easy: [], medium: [], hard: [] },
+        Satellites: { easy: [], medium: [], hard: [] },
+        Asteroids: { easy: [], medium: [], hard: [] },
+        Comets: { easy: [], medium: [], hard: [] },
     });
+
+    const images = {
+        planets: "/quiz/earth.png",
+        moons: "/quiz/moon.png",
+        suns: "/quiz/sun.png",
+        satellites: "/quiz/satellite.png",
+        asteroids: "/quiz/asteroid.png",
+        comets: "/quiz/comet.png",
+    };
+
+    const categoryDescriptions = {
+        planets: 'Explore the diverse planets in our solar system.',
+        moons: 'Learn about the fascinating moons orbiting planets.',
+        suns: 'Discover the stars that light up our universe.',
+        satellites: 'Understand the artificial satellites orbiting Earth.',
+        asteroids: 'Study the rocky bodies scattered across space.',
+        comets: 'Investigate the icy visitors from the outer solar system.'
+    };
+
+    const capitalize = (str) => str.charAt(0).toUpperCase() + str.slice(1);
 
     const [questions, setQuestions] = useState([]);
     const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
@@ -73,27 +93,43 @@ const Quiz = () => {
                 <div>
                     {Object.keys(categories).map((category) => (
                         <div className="row mb-4 mx-auto" key={category}>
-                            <div className="col-md-2">
+                            <div className="col-md-3">
                                 <div className="card">
                                     <div className="card-body text-center">
-                                      <img src="/textures/venus.jpg" alt="NASA Logo" width="150" height="150"/>
+                                        <img src={images[category]} alt={`${capitalize(category)} Image`} width="294" height="294" />
                                     </div>
                                 </div>
                             </div>
-                            <div className="col-md-10">
-                                <div className="card">
+                            <div className="col-md-3" key={category}>
+                                <div className="card custom-height">
                                     <div className="card-body text-center">
-                                        <h5 className="card-title text-capitalize">{category}</h5>
-                                        <div className="d-flex justify-content-around">
-                                            <button className="btn btn-outline-primary" onClick={() => startQuiz(category, "easy")}>
-                                                Easy
-                                            </button>
-                                            <button className="btn btn-outline-warning" onClick={() => startQuiz(category, "medium")}>
-                                                Medium
-                                            </button>
-                                            <button className="btn btn-outline-danger" onClick={() => startQuiz(category, "hard")}>
-                                                Hard
-                                            </button>
+                                        <h5 className="card-title mt-5 title-size">{capitalize(category)}</h5>
+                                        <p className="card-text">{categoryDescriptions[category]}</p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div className="col-md-6" key={category}>
+                                <div className="card custom-height">
+                                    <div className="card-body text-center">
+                                        <div className="d-flex flex-column align-items-start justify-content-center custom-height">
+                                            <div className="d-flex align-items-center mb-5 ml-2">
+                                                <button className="btn btn-secondary" onClick={() => startQuiz(category, "easy")}>
+                                                    Easy
+                                                </button>
+                                                <span className="ml-2 text-color">Easy Level</span>
+                                            </div>
+                                            <div className="d-flex align-items-center mb-5 ml-2">
+                                                <button className="btn btn-primary" onClick={() => startQuiz(category, "medium")}>
+                                                    Medium
+                                                </button>
+                                                <span className="ml-2 text-color">Medium Level</span>
+                                            </div>
+                                            <div className="d-flex align-items-center ml-2">
+                                                <button className="btn btn-danger" onClick={() => startQuiz(category, "hard")}>
+                                                    Hard
+                                                </button>
+                                                <span className="ml-2 text-color">Hard Level</span>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>

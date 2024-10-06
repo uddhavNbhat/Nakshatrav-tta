@@ -44,28 +44,28 @@ const About = () => {
             <div className='card_container'>
 
                 <div className="card">
-                    <div id="card-one" style={{ width: '400px', height: '200px' }}></div>
+                    <div id="card-one" style={{ width: '600px', height: '200px' }}></div>
                     <div className="card-body">
                         <h3 className="card-title">Mars</h3>
                     </div>
                 </div>
 
                 <div className="card">
-                    <div id="card-two" style={{ width: '400px', height: '200px' }}></div>
+                    <div id="card-two" style={{ width: '600px', height: '200px' }}></div>
                     <div className="card-body">
                         <h3 className="card-title">Saturn</h3>
                     </div>
                 </div>
 
                 <div className="card">
-                    <div id="card-three" style={{ width: '400px', height: '200px' }}></div>
+                    <div id="card-three" style={{ width: '600px', height: '200px' }}></div>
                     <div className="card-body">
                         <h3 className="card-title">Uranus</h3>
                     </div>
                 </div>
 
                 <div className="card">
-                    <div id="card-four" style={{ width: '400px', height: '200px' }}></div>
+                    <div id="card-four" style={{ width: '600px', height: '200px' }}></div>
                     <div className="card-body">
                         <h3 className="card-title">Jupiter</h3>
                     </div>

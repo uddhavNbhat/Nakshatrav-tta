@@ -6,19 +6,30 @@ import { Link } from "react-router-dom";
 const Home = () => {
     return (
         <div className="main-container">
+            <video autoPlay muted loop className="background-video">
+                <source src="planetVid.mp4" type="video/mp4" />
+                Your browser does not support the video tag.
+            </video>
+            <br />
+            <br />
+            <br />
+            <br />
+            <br />
+            <br />
+            <br />
+            <br />
             <div className="header">
                 <div className="text-wrapper">
-                    <h1 className="display-4">Explore the Cosmos: A Journey Through Space</h1>
-                </div>
-                <div className="text-wrapper">
-                    <p className="lead">An interactive exploration of celestial bodies, including planets, asteroids, and comets</p>
+                    <h1 className="main-heading">Explore the Cosmos: An interactive exploration of celestial bodies</h1>
                 </div>
             </div>
             <div className="orrery">
-                <Link className="btn btn-primary btn-lg" to="/solar" role="button">Launch Orrery</Link>
+                <Link className="btn btn-primary btn-lg custom-button" to="/solar" role="button">
+                    Launch Orrery 🚀
+                </Link>
             </div>
         </div>
     );
-}
+};
 
 export default Home;

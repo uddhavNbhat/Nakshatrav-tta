@@ -1,4 +1,52 @@
-.card{
+.card {
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Initial box shadow */
     transition: transform 0.3s ease, box-shadow 0.3s ease; /* Smooth transition for hover effect */
+    background-color: whitesmoke; /* Change card background to grey */
+    color: white; /* Change font color to white */
+}
+
+body {
+    background-color: #001118;
+}
+
+.custom-height {
+    height: 300px; /* Adjust the height as needed */
+}
+
+.d-flex.flex-column.align-items-start.justify-content-center {
+    align-items: flex-start; /* Align items to the left */
+    justify-content: center; /* Center items vertically */
+}
+
+.btn {
+    width: 100px; /* Make buttons take full width */
+}
+
+.mb-3 {
+    margin-bottom: 1rem; /* Increase margin between buttons */
+}
+
+.ml-2 {
+    margin-left: 1rem; /* Add margin to the left of the text */
+}
+
+.text-color {
+    color: black;
+    font-size: large; /* Change text color */
+    font-style: bold; /* Make text bold */
+}
+
+.title-size {
+    font-size: 1.5rem; /* Increase font size of the title */
+}
+
+.card-text {
+    margin-top: 1rem; /* Add margin above the text */
+    color: black; /* Change text color */
+    font-size: 1rem; /* Set font size for the text */
+}
+
+.card-title {
+    color: black; /* Change title color */
+    font-size: 1.5rem; /* Set font size for the title */
 }
