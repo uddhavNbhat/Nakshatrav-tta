@@ -14,6 +14,7 @@ const SolarSystem = () => {
     const guiContainerRef = useRef(null);
 
     useEffect(() => {
+        document.body.style.overflow = "hidden";
         if (!vizRef.current) {
             const viz = new Spacekit.Simulation(document.getElementById("main-container"), {
                 basePath: "https://typpo.github.io/spacekit/src",
@@ -280,6 +281,7 @@ const SolarSystem = () => {
             guiContainer.style.width = "130px"; // Width of the sidebar
             guiContainer.style.zIndex = "100"; // Ensure it's on top
             guiContainer.style.display = isSidebarVisible ? "block" : "none";
+            
 
             // Append the GUI to the sidebar
             guiContainer.appendChild(gui.domElement);
@@ -391,6 +393,10 @@ const SolarSystem = () => {
             moonFolder.open();
 
             gui.open(); // Open the GUI
+            return()=>{
+                document.body.style.overflow = "auto";
+
+            }
         }
     }, [timeSpeed, isPaused, selectedPlanet, isSidebarVisible, selectedMoon]); // Dependencies include cameraPos
 
@@ -417,7 +423,7 @@ const SolarSystem = () => {
     }, [timeSpeed, isPaused]);
 
     return (
-        <div>
+        <div className="solar-system-container" style={{ width: "100vw", height: "100vh", overflow: "hidden"}}>
             <button
                 className="toggle-sidebar-btn"
                 onClick={() => setSidebarVisible(!isSidebarVisible)}

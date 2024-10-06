@@ -1,7 +1,7 @@
 import './App.css'
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Index from "./components/Index.jsx";
-import Quiz from "./components/Quiz.jsx";
+import Quiz from "./components/Quiz/Quiz.jsx";
 import SolarPage from './components/SolarPage.jsx';
 
 function App() {

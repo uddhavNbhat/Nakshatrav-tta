@@ -1,14 +1,22 @@
-.jumbotron {
-    background-image: url('./Image/background.jpg');
+body, html {
+    margin: 0;
+    padding: 0;
+    width: 100%;
+    overflow: hidden;
+}
+
+.main-container {
+    background-image: url('../../static/Image/background.jpg');
     background-size: cover;
     background-position: center;
+    background-repeat: no-repeat;
+    overflow: hidden;
     height: 100vh;
     display: flex;
     flex-direction: column;
     justify-content: center;
     align-items: center;
     color: #fff;
-    margin: 0;
 }
 
 .header {

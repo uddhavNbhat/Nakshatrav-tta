@@ -1,7 +1,7 @@
 import "bootstrap/dist/css/bootstrap.min.css";
 import "bootstrap/dist/js/bootstrap.bundle.min";
 import { Link } from "react-router-dom"; // Import Link
-import "../../static/Nav.css";
+import "./Nav.css";
 
 function Nav() { // Make sure to pass user and handleLogout as props
     return (

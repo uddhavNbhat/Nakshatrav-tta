@@ -1,9 +1,8 @@
-html,body,#main-container {
+body,#main-container {
     width: 100vw;  /* Full width of the viewport */
     height: 100vh; /* Full height of the viewport */
     margin: 0;
     padding: 0;
-    overflow: hidden;
 }
 
 .planet-info {
@@ -55,10 +54,6 @@ html,body,#main-container {
   }
   .toggle-sidebar-btn:hover {
     background-color: #0056b3;
-  }
-
-  .dg{
-
   }
 
   .dg .close-button {

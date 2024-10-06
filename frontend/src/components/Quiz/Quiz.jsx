@@ -1,8 +1,9 @@
 import { useState, useEffect } from "react";
-import Nav from "./Navbar/Nav";
+import Nav from "../Navbar/Nav";
 import "bootstrap/dist/css/bootstrap.min.css";
 import "bootstrap/dist/js/bootstrap.bundle.min";
-import quizData from "../quizdata/QuizData";
+import quizData from "./QuizData.jsx";
+import './Quiz.css'
 
 const Quiz = () => {
     const [categories, setCategories] = useState({
@@ -23,6 +24,7 @@ const Quiz = () => {
     const [selectedCategory, setSelectedCategory] = useState(null);
 
     useEffect(() => {
+        document.body.style.overflow = "auto";
         setCategories(quizData);
     }, []);
 
@@ -70,7 +72,7 @@ const Quiz = () => {
             {!quizStarted && !selectedCategory && (
                 <div>
                     {Object.keys(categories).map((category) => (
-                        <div className="row mb-4" key={category}>
+                        <div className="row mb-4 mx-auto" key={category}>
                             <div className="col-md-2">
                                 <div className="card">
                                     <div className="card-body text-center">
@@ -78,25 +80,7 @@ const Quiz = () => {
                                     </div>
                                 </div>
                             </div>
-                            <div className="col-md-3">
-                                <div className="card">
-                                    <div className="card-body text-center">
-                                        <h5 className="card-title text-capitalize">{category}</h5>
-                                        <div className="d-flex justify-content-around">
-                                            <button className="btn btn-outline-primary" onClick={() => startQuiz(category, "easy")}>
-                                                Easy
-                                            </button>
-                                            <button className="btn btn-outline-warning" onClick={() => startQuiz(category, "medium")}>
-                                                Medium
-                                            </button>
-                                            <button className="btn btn-outline-danger" onClick={() => startQuiz(category, "hard")}>
-                                                Hard
-                                            </button>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div className="col-md-7">
+                            <div className="col-md-10">
                                 <div className="card">
                                     <div className="card-body text-center">
                                         <h5 className="card-title text-capitalize">{category}</h5>
