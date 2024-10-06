@@ -79,7 +79,30 @@ body, html {
 
 /* Optional hover effect for text box */
 .text-wrapper:hover {
-    transform: translateY(-5px); /* Slight upward movement on hover */
+    transform: scale(1.05); /* Slightly enlarge on hover */
+}
+
+.custom-button {
+    width: 300px !important; /* Increase the width of the button */
+    height: 80px;
+    border-radius: 25px;
+    background-color: orange; /* Change button color to orange */
+    font-weight: bold; /* Make the text bold */
+    border-width: 3px;
+    border-color: white; /* Ensure the border color matches the button color */
+    text-align: center;
+    display: flex; /* Use flexbox for vertical alignment */
+    align-items: center; /* Center items vertically */
+    justify-content: center; /* Center items horizontally */
+    font-size: 1.5rem; /* Increase text size */
+    font-family: 'work sans', sans-serif; /* Change font family */
+    transition: background-color 0.5s ease, border-color 0.5s ease, transform 0.5s ease; /* Add transition for hover effects */
+}
+
+.custom-button:hover {
+    background-color: #ff8c00; /* Darken the button color on hover */
+    border-color: white; /* Darken the border color on hover */
+    transform: scale(1.07); /* Slightly enlarge on hover */
 }
 
 /* Responsive design for smaller screens */
