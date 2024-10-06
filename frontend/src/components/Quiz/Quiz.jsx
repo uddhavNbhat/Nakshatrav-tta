@@ -25,12 +25,12 @@ const Quiz = () => {
     };
 
     const categoryDescriptions = {
-        planets: 'Explore the diverse planets in our solar system.',
-        moons: 'Learn about the fascinating moons orbiting planets.',
-        suns: 'Discover the stars that light up our universe.',
-        satellites: 'Understand the artificial satellites orbiting Earth.',
-        asteroids: 'Study the rocky bodies scattered across space.',
-        comets: 'Investigate the icy visitors from the outer solar system.'
+        planets: "Explore the diverse planets in our solar system.",
+        moons: "Learn about the fascinating moons orbiting planets.",
+        suns: "Discover the stars that light up our universe.",
+        satellites: "Understand the artificial satellites orbiting Earth.",
+        asteroids: "Study the rocky bodies scattered across space.",
+        comets: "Investigate the icy visitors from the outer solar system.",
     };
 
     const capitalize = (str) => str.charAt(0).toUpperCase() + str.slice(1);
@@ -143,39 +143,45 @@ const Quiz = () => {
             {quizStarted && selectedCategory && (
                 <div>
                     <div className="d-flex justify-content-between align-items-center">
-                        <h2>{questions[currentQuestionIndex].question}</h2>
-                        <div>Timer: {timer}s</div>
+                        <h2 className="question-text" style={{ marginBottom: "20px" }}>
+                            {questions[currentQuestionIndex].question}
+                        </h2>
+                        <div style={{ color: "white" }}>Timer: {timer}s</div>
                     </div>
-
-                    <div className="mt-3">
+                    <div className="mt-3 d-flex flex-wrap justify-content-center">
                         {questions[currentQuestionIndex].options.map((option, index) => (
                             <button
                                 key={index}
                                 onClick={() => handleAnswerSelect(index)}
-                                className={`btn btn-block mb-2 ${
+                                className={`btn btn-block mb-3 ${
                                     selectedAnswers[currentQuestionIndex] === index
                                         ? index === questions[currentQuestionIndex].correctAnswer
                                             ? "btn-success"
                                             : "btn-danger"
                                         : "btn-outline-primary"
                                 }`}
+                                style={{ margin: "10px", flex: "1 0 21%" }} // 21% to fit 4 columns with margins
                             >
                                 {option}
                             </button>
                         ))}
                     </div>
 
-                    <div className="mt-4 d-flex justify-content-between">
-                        <button
-                            className="btn btn-secondary"
-                            onClick={() => setCurrentQuestionIndex((prevIndex) => prevIndex + 1)}
-                            disabled={currentQuestionIndex >= questions.length - 1}
-                        >
-                            Next Question
-                        </button>
-                        <button className="btn btn-primary" onClick={handleSubmit}>
-                            Submit Test
-                        </button>
+                    <div className="d-flex justify-content-end fixed-bottom" style={{ padding: "20px" }}>
+                        {currentQuestionIndex < questions.length - 1 ? (
+                            <button
+                                className="btn btn-secondary"
+                                onClick={() => setCurrentQuestionIndex((prevIndex) => prevIndex + 1)}
+                                disabled={currentQuestionIndex >= questions.length - 1}
+                                style={{ width: "150px" }}
+                            >
+                                Next Question
+                            </button>
+                        ) : (
+                            <button className="btn btn-primary" onClick={handleSubmit} style={{ width: "150px" }}>
+                                Submit Test
+                            </button>
+                        )}
                     </div>
                 </div>
             )}
