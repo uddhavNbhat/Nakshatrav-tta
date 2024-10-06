@@ -10,13 +10,13 @@ function Nav() { // Make sure to pass user and handleLogout as props
                 {/* Brand Logo and Title */}
                 <Link className="navbar-brand" to="/">
                     <img
-                        src="https://upload.wikimedia.org/wikipedia/commons/thumb/e/e5/NASA_logo.svg/1200px-NASA_logo.svg.png"
-                        alt="NASA Logo"
+                        src="../../public/nasalogo.jpeg"
+                        alt="Logo"
                         width="30"
                         height="24"
                         className="d-inline-block align-text-top"
                     />
-                    Nasa Space Apps
+                    Orbitronica
                 </Link>
 
                 {/* Navbar Toggle (for mobile view) */}
