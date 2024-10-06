@@ -10,7 +10,7 @@ import jsonData from "./Learning/Data/Coordinate";
 
 const SolarSystem = () => {
     const vizRef = useRef(null); // Create a ref to store the simulation instance
-    const [timeSpeed, setTimeSpeed] = useState(10); // State for controlling time speed
+    const [timeSpeed, setTimeSpeed] = useState(1); // State for controlling time speed
     const [isPaused, setIsPaused] = useState(false); // Control pause/play
     const [selectedPlanet, setSelectedPlanet] = useState(null);
     const [isSidebarVisible, setSidebarVisible] = useState(true);
@@ -540,9 +540,9 @@ const SolarSystem = () => {
             <div id="main-container"></div>
             <div className="time-control">
                 <label htmlFor="timeSpeed">Time Speed: </label>
-                <input id="timeSpeed" type="range" className="form-range me-2" min="1" max="10" step="1" value={timeSpeed} onChange={(e) => setTimeSpeed(Number(e.target.value))} />
+                <input id="timeSpeed" type="range" min="1" max="10" step="1" value={timeSpeed} onChange={(e) => setTimeSpeed(Number(e.target.value))} />
                 <span>{timeSpeed}x</span>
-                <button className="btn btn-primary" onClick={() => setIsPaused(!isPaused)} style={{ marginLeft: "5px" }}>
+                <button onClick={() => setIsPaused(!isPaused)} style={{ marginLeft: "5px" }}>
                     {isPaused ? "Resume" : "Pause"}
                 </button>
             </div>
