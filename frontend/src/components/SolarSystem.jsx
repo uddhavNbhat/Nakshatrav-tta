@@ -3,6 +3,8 @@ import * as Spacekit from "spacekit.js";
 import "../static/SolarSystem.css";
 import * as dat from "dat.gui";
 import "bootstrap/dist/css/bootstrap.min.css";
+import gsap from "gsap";
+
 
 const SolarSystem = () => {
     const vizRef = useRef(null); // Create a ref to store the simulation instance
@@ -297,44 +299,60 @@ const SolarSystem = () => {
 
             planetData.forEach((planet, index) => {
                 planetFolder
-                    .add(planetStates, planet.name)
-                    .name(planet.name)
-                    .onChange((value) => {
-                        if (value) {
-                            // Deselect all planets and moons when a new planet is selected
-                            Object.keys(planetStates).forEach((p) => (planetStates[p] = false));
-                            Object.keys(moonStates).forEach((m) => (moonStates[m] = false));
+                .add(planetStates, planet.name)
+                .name(planet.name)
+                .onChange((value) => {
+                    if (value) {
+                        // Deselect all planets and moons when a new planet is selected
+                        Object.keys(planetStates).forEach((p) => (planetStates[p] = false));
+                        Object.keys(moonStates).forEach((m) => (moonStates[m] = false));
 
-                            // Only set the current planet to true
-                            planetStates[planet.name] = true;
-                            setSelectedPlanet(planet.name);
-                            setSelectedMoon(null); // Reset moon selection
+                        // Only set the current planet to true
+                        planetStates[planet.name] = true;
+                        setSelectedPlanet(planet.name);
+                        setSelectedMoon(null); // Reset moon selection
 
-                            // Move the camera to the selected planet (existing logic)
-                            const viewer = viz.getViewer();
-                            const camera = viz.getViewer().camera;
-                            const currentJD = viz.getJd();
-                            const planetObject = planets[index];
-                            const pos = planetObject.getPosition(currentJD);
-                            const zoomFactor = 0.0005;
+                        // Move the camera to the selected planet with a smooth zoom effect
+                        const viewer = viz.getViewer();
+                        const camera = viz.getViewer().camera;
+                        const currentJD = viz.getJd();
+                        const planetObject = planets[index];
+                        const pos = planetObject.getPosition(currentJD);
+                        const zoomFactor = 0.0005;
 
-                            if (pos) {
-                                camera.position.set(pos[0] * zoomFactor, pos[1] * zoomFactor, pos[2] * zoomFactor); // Apply zoomFactor
-                                viewer.followObject(planetObject, [pos[0] * zoomFactor, pos[1] * zoomFactor, pos[2] * zoomFactor]);
-                                console.log(`Camera zoomed to: x=${pos[0] * zoomFactor}, y=${pos[1] * zoomFactor}, z=${pos[2] * zoomFactor}`);
-                            }
-                        } else {
-                            // If unchecked, reset camera to sun
-                            setSelectedPlanet(null);
-                            const camera = viz.getViewer().camera;
-                            camera.position.set(0, 5, 10);
-                            viz.getViewer().followObject(sun, [0, -10, 5]);
+                        if (pos) {
+                            // Smooth camera zoom to planet's position using GSAP
+                            gsap.to(camera.position, {
+                                x: pos[0] * zoomFactor,
+                                y: pos[1] * zoomFactor,
+                                z: pos[2] * zoomFactor,
+                                duration: 2, // Duration of the zoom effect in seconds
+                                ease: "power2.out", // Ease-out effect for smooth animation
+                                onUpdate: () => {
+                                    // Continue following the planet during the animation
+                                    viewer.followObject(planetObject, [camera.position.x, camera.position.y, camera.position.z]);
+                                },
+                            });
                         }
+                    } else {
+                        // If unchecked, reset camera to sun with a smooth transition
+                        setSelectedPlanet(null);
+                        gsap.to(camera.position, {
+                            x: 0,
+                            y: 5,
+                            z: 10,
+                            duration: 2, // Smooth transition back to the Sun
+                            ease: "power2.out",
+                            onUpdate: () => {
+                                viewer.followObject(sun, [0, -10, 5]);
+                            },
+                        });
+                    }
 
-                        // Update GUI to reflect the current state of all checkboxes
-                        planetFolder.updateDisplay();
-                        moonFolder.updateDisplay();
-                    });
+                    // Update GUI to reflect the current state of all checkboxes
+                    planetFolder.updateDisplay();
+                    moonFolder.updateDisplay();
+                });
             });
 
             planetFolder.open();
@@ -349,45 +367,58 @@ const SolarSystem = () => {
 
             moonData.forEach((moon, index) => {
                 moonFolder
-                    .add(moonStates, moon.name)
-                    .name(moon.labelText)
-                    .onChange((value) => {
-                        if (value) {
-                            // Deselect all moons and planets when a new moon is selected
-                            Object.keys(planetStates).forEach((p) => (planetStates[p] = false));
-                            Object.keys(moonStates).forEach((m) => (moonStates[m] = false));
+                .add(moonStates, moon.name)
+                .name(moon.labelText)
+                .onChange((value) => {
+                    if (value) {
+                        // Deselect all moons and planets when a new moon is selected
+                        Object.keys(planetStates).forEach((p) => (planetStates[p] = false));
+                        Object.keys(moonStates).forEach((m) => (moonStates[m] = false));
 
-                            // Only set the current moon to true
-                            moonStates[moon.name] = true;
-                            setSelectedPlanet(null);
-                            setSelectedMoon(moon.name);
+                        // Only set the current moon to true
+                        moonStates[moon.name] = true;
+                        setSelectedPlanet(null);
+                        setSelectedMoon(moon.name);
 
-                            // Move the camera to the selected moon (existing logic)
-                            const viewer = viz.getViewer();
-                            const camera = viewer.camera;
-                            const currentJD = viz.getJd();
-                            const moonObject = Moons[index];
-                            const pos = moonObject.getPosition(currentJD);
-                            const zoomFactor = 0.0005; // Retrieve zoom factor for the moon
+                        // Move the camera to the selected moon with a smooth zoom effect
+                        const viewer = viz.getViewer();
+                        const camera = viewer.camera;
+                        const currentJD = viz.getJd();
+                        const moonObject = Moons[index];
+                        const pos = moonObject.getPosition(currentJD);
+                        const zoomFactor = 0.0005; // Retrieve zoom factor for the moon
 
-                            if (pos) {
-                                // Apply zoom factor to the moon's position
-                                camera.position.set(pos[0] * zoomFactor, (pos[1] + 0.5) * zoomFactor, pos[2] * zoomFactor);
-                                viewer.followObject(moonObject, [pos[0] * zoomFactor, (pos[1] + 0.5) * zoomFactor, pos[2] * zoomFactor]);
-                                console.log(`Camera zoomed to moon: x=${pos[0] * zoomFactor}, y=${pos[1] * zoomFactor}, z=${pos[2] * zoomFactor}`);
-                            }
-                        } else {
-                            // If unchecked, reset camera to sun
-                            setSelectedMoon(null);
-                            const camera = viz.getViewer().camera;
-                            camera.position.set(0, 5, 10);
-                            viz.getViewer().followObject(sun, [0, -10, 5]);
+                        if (pos) {
+                            gsap.to(camera.position, {
+                                x: pos[0] * zoomFactor,
+                                y: (pos[1] + 0.5) * zoomFactor,
+                                z: pos[2] * zoomFactor,
+                                duration: 2, // Duration of the zoom effect
+                                ease: "power2.out", // Smooth animation
+                                onUpdate: () => {
+                                    viewer.followObject(moonObject, [camera.position.x, camera.position.y, camera.position.z]);
+                                },
+                            });
                         }
+                    } else {
+                        // Reset camera to sun with a smooth transition
+                        setSelectedMoon(null);
+                        gsap.to(camera.position, {
+                            x: 0,
+                            y: 5,
+                            z: 10,
+                            duration: 2,
+                            ease: "power2.out",
+                            onUpdate: () => {
+                                viewer.followObject(sun, [0, -10, 5]);
+                            },
+                        });
+                    }
 
-                        // Update GUI to reflect the current state of all checkboxes
-                        planetFolder.updateDisplay();
-                        moonFolder.updateDisplay();
-                    });
+                    // Update GUI to reflect the current state of all checkboxes
+                    planetFolder.updateDisplay();
+                    moonFolder.updateDisplay();
+                });
             });
 
             moonFolder.open();
