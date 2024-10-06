@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import * as Spacekit from "spacekit.js";
 import "../static/SolarSystem.css";
+import "bootstrap/dist/js/bootstrap.bundle.min";
 import * as dat from "dat.gui";
 import "bootstrap/dist/css/bootstrap.min.css";
 import gsap from "gsap";
@@ -339,6 +340,8 @@ const SolarSystem = () => {
                         }
                     } else {
                         // If unchecked, reset camera to sun with a smooth transition
+                        const viewer = viz.getViewer();
+                        const camera = viz.getViewer().camera;
                         setSelectedPlanet(null);
                         gsap.to(camera.position, {
                             x: 0,
@@ -405,6 +408,8 @@ const SolarSystem = () => {
                         }
                     } else {
                         // Reset camera to sun with a smooth transition
+                        const viewer = viz.getViewer();
+                        const camera = viz.getViewer().camera;
                         setSelectedMoon(null);
                         gsap.to(camera.position, {
                             x: 0,

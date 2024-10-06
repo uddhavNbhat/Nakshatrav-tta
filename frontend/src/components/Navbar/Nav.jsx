@@ -41,8 +41,24 @@ function Nav() { // Make sure to pass user and handleLogout as props
                         <li className="nav-item">
                             <Link className="nav-link" to="/solar">Solar System</Link>
                         </li>
-                        <li className="nav-item">
-                            <Link className="nav-link" to="#">Learning Section</Link>
+                        <li className="nav-item dropdown">
+                            <button
+                                className="nav-link dropdown-toggle" 
+                                id="learningDropdown" 
+                                role="button" 
+                                data-bs-toggle="dropdown" 
+                                aria-expanded="false"
+                            >
+                                Learning Section
+                            </button>
+                            <ul className="dropdown-menu" aria-labelledby="learningDropdown">
+                                <li>
+                                    <Link className="dropdown-item" to="/learning/comet">Comets</Link>
+                                </li>
+                                <li>
+                                    <Link className="dropdown-item" to="/satellites">Satellites</Link>
+                                </li>
+                            </ul>
                         </li>
                         <li className="nav-item">
                             <Link className="nav-link" to="/quiz">Quiz Section</Link> {/* Link to quiz path */}
