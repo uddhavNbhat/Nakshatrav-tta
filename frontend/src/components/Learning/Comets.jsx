@@ -117,8 +117,8 @@ const Comets = () => {
                 <div className="row Header mx-auto">
                     <h1>Learning</h1>
                 </div>
-                <div className="row mx-auto" style={{textAlign:"center"}}>
-                    <h1>Comets</h1>
+                <div className="row mx-auto" style={{textAlign:"center",margin:"20px"}}>
+                    <h1 style={{color:"white"}}>Comets</h1>
                 </div>
                 <div className="row">
                     {displayedComets().map((comet, index) => (
@@ -139,7 +139,7 @@ const Comets = () => {
                         <button className="btn btn-secondary" onClick={handlePreviousPage} disabled={currentPage === 1}>
                             Previous
                         </button>
-                        <span className="mx-3">Page {currentPage} of {totalPages}</span>
+                        <span className="mx-3" style={{color:"white"}}>Page {currentPage} of {totalPages}</span>
                         <button className="btn btn-secondary" onClick={handleNextPage} disabled={currentPage === totalPages}>
                             Next
                         </button>
