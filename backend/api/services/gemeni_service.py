@@ -2,6 +2,7 @@ from flask import Flask, request, jsonify
 import requests
 import os
 from dotenv import load_dotenv
+import re
 
 # Load environment variables from .env file
 load_dotenv()
@@ -88,19 +89,16 @@ def call_gemini_api(question, planet):
         print("Gemini API Error:", response.status_code)
         print("Error Details:", response.text)
         return "Sorry, there was an error processing your request."
-    
 
 def gemeni_query_answers(topic):
-    # Retrieve topic instructions from the dictionary or return a default message
+    # Get the instruction for the topic
     instructions = topic_instructions.get(
         topic,
         {"question_prompt": "Please select the quiz you want to participate in."}
     )
-
-    # Use the question prompt from the selected topic
     personalized_prompt = instructions["question_prompt"]
 
-    # Prepare the payload for the Gemini API
+    # Prepare the payload for the request
     payload = {
         "contents": [
             {
@@ -114,35 +112,89 @@ def gemeni_query_answers(topic):
 
     print("Sending Payload:", payload)
 
-    # Send the request to the Gemini API
-    response = requests.post(GEMINI_API_URL, headers=headers, json=payload)
+    # Sending the request to the Gemini API
+    try:
+        response = requests.post(GEMINI_API_URL, headers=headers, json=payload)
+        # Check if the response is successful
+        if response.status_code == 200:
+            # Parse the response content
+            data = response.json()
 
-    if response.status_code == 200:
-        data = response.json()
-        try:
-            # Parse the response to extract the question and answer options
-            response_text = data['candidates'][0]['content']['parts'][0]['text']
-            
-            # Example of parsing the response to create a list of questions and options
-            questions = []
-            lines = response_text.split("\n")
-            for i in range(0, len(lines), 5):  # 5 lines per question: 1 question + 4 options
-                if i + 4 < len(lines):
-                    question = lines[i].strip()
-                    options = [lines[i + 1].strip(), lines[i + 2].strip(), lines[i + 3].strip(), lines[i + 4].strip()]
-                    correct_answer_index = options.index(lines[i + 1].strip())  # For simplicity, we'll assume the first option is always correct
-                    questions.append({
-                        "question": question,
-                        "options": options,
-                        "correctAnswer": correct_answer_index
-                    })
+            # If there's no 'candidates' field or it's empty, we should log this
+            if 'candidates' not in data or len(data['candidates']) == 0:
+                print("No candidates found in response.")
+                return "Sorry, no candidates found in the response."
 
-            return questions
+            try:
+                response_text = data['candidates'][0]['content']['parts'][0]['text']
+                print("Received Response Text:", response_text)
 
-        except (KeyError, IndexError) as e:
-            print("Error parsing Gemini response:", e)
-            return "Sorry, I couldn't parse the response."
-    else:
-        print("Gemini API Error:", response.status_code)
-        print("Error Details:", response.text)
-        return "Sorry, there was an error processing your request."
+                # Clean and filter lines
+                lines = [line.strip() for line in response_text.split("\n") if line.strip()]
+                clean_lines = [
+                    re.sub(r"^\*+\s*", "", line).replace("**", "").strip()
+                    for line in lines
+                    if not re.match(r"^\*?\*?(Correct Answer|Easy|Medium|Hard)", line, re.IGNORECASE)
+                ]
+
+                questions = []
+                current = {}
+                options = []
+
+                for line in clean_lines:
+                    if re.match(r"^\d+\.\s", line):  # Start of a new question
+                        if current and len(options) == 4:
+                            current["options"] = options
+                            questions.append(current)
+                        current = {
+                            "question": line,
+                            "correctAnswer": 0  # default, adjust if needed
+                        }
+                        options = []
+                    elif re.match(r"^[a-dA-D]\)", line):  # Option line
+                        options.append(line)
+
+                # Add last question if valid
+                if current and len(options) == 4:
+                    current["options"] = options
+                    questions.append(current)
+
+                return questions
+
+            except (KeyError, IndexError) as e:
+                print("Error parsing Gemini response:", e)
+                return "Sorry, I couldn't parse the response."
+        else:
+            print(f"Gemini API Error: {response.status_code}")
+            print("Error Details:", response.text)
+            return "Sorry, there was an error processing your request."
+    except requests.exceptions.RequestException as e:
+        # If the request fails, log the exception
+        print("Request failed:", e)
+        return "Sorry, there was an issue with the API request."
+
+def clean_questions(raw_questions, difficulty):
+    cleaned = []
+    i = 1  # Start index
+
+    while i <= len(raw_questions):  # Iterate over the raw_questions list
+        q = raw_questions[i - 1]  # Get the current question (since i starts from 1)
+        
+        # Check if the question has the required 'question' and 'options' keys
+        if "question" in q and "options" in q and len(q["options"]) == 4:
+            # Ensure 'question' is a string before applying regex
+            question_text = str(q['question'])
+            cleaned_question = re.sub(r'^\d+\.\s*', '', question_text)  # Remove leading digits
+            cleaned.append({
+                "question": f"{i}. {cleaned_question}",
+                "options": [opt.strip() for opt in q["options"]],
+                "correctAnswer": q.get("correctAnswer", 0),
+                "difficulty": difficulty
+            })
+        
+        # Increment the index
+        i += 1
+
+    return cleaned
+
+

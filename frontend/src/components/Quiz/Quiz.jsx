@@ -37,8 +37,8 @@ const Quiz = () => {
 
     const [questions, setQuestions] = useState([]);
     const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
-    const [selectedAnswers, setSelectedAnswers] = useState(Array(10).fill(null));
-    const [score, setScore] = useState(0);
+    const [selectedAnswers, setSelectedAnswers] = useState(Array(5).fill(null)); // Adjusted for 5 questions
+    const [score, setScore] = useState(null);
     const [timer, setTimer] = useState(0);
     const [quizStarted, setQuizStarted] = useState(false);
     const [selectedCategory, setSelectedCategory] = useState(null);
@@ -62,16 +62,22 @@ const Quiz = () => {
         setSelectedCategory({ category, difficulty });
         setDifficulty(difficulty);
 
-        // Send a request to the backend to fetch the quiz data
         axios
-            .post("http://localhost:5000/api/quiz", { category, difficulty })
+            .post("http://localhost:5000/api/quiz", { category, difficulty }, {
+                headers: { "Content-Type": "application/json" },
+            })
             .then((response) => {
-                const filteredQuestions = response.data.questions.filter(
-                    (question) => question.difficulty === difficulty
-                );
-                setQuestions(filteredQuestions); // Filter questions by difficulty
+                // Filter questions to only the selected difficulty and limit to 5 questions
+                const filteredQuestions = response.data.questions
+                    .filter((q) => q.difficulty === difficulty)
+                    .slice(0, 5); // Ensure only 5 questions are included
+
+                setQuestions(filteredQuestions);
                 setQuizStarted(true);
                 setTimer(0);
+                setCurrentQuestionIndex(0);
+                setSelectedAnswers(Array(5).fill(null)); // Reset answers for 5 questions
+                setScore(null);
             })
             .catch((error) => {
                 console.error("Error starting the quiz:", error);
@@ -87,31 +93,34 @@ const Quiz = () => {
     const handleSubmit = () => {
         let newScore = 0;
         selectedAnswers.forEach((answer, index) => {
-            if (answer === questions[index].correctAnswer) {
+            if (answer !== null && answer === questions[index].correctAnswer) {
                 newScore += 1;
             }
         });
+    
         setScore(newScore);
         setQuizStarted(false);
     };
 
     const handleStartOver = () => {
-        // Reset everything for a new quiz
-        setScore(0);
+        setScore(null);
         setTimer(0);
         setQuizStarted(false);
         setSelectedCategory(null);
-        setSelectedAnswers(Array(10).fill(null));
+        setDifficulty(null);
+        setQuestions([]);
+        setSelectedAnswers(Array(5).fill(null)); // Adjusted for 5 questions
+        setCurrentQuestionIndex(0);
     };
 
     return (
         <div className="container mt-5">
-            <div className="navbar" style={{ marginBottom: "40px" }}>
+            <div className="navbar mb-5">
                 <Nav />
             </div>
 
-            {/* Display category cards if quiz hasn't started */}
-            {!quizStarted && !selectedCategory && (
+            {/* Category cards */}
+            {!quizStarted && score === null && !selectedCategory && (
                 <div>
                     {Object.keys(categories).map((category) => (
                         <div className="row mb-4 mx-auto" key={category}>
@@ -177,11 +186,11 @@ const Quiz = () => {
                 </div>
             )}
 
-            {/* Quiz section */}
+            {/* Quiz Section */}
             {quizStarted && selectedCategory && (
                 <div>
                     <div className="d-flex justify-content-between align-items-center">
-                        <h2 className="question-text" style={{ marginBottom: "20px" }}>
+                        <h2 className="question-text mb-4">
                             {questions[currentQuestionIndex].question}
                         </h2>
                         <div style={{ color: "white" }}>Timer: {timer}s</div>
@@ -193,27 +202,33 @@ const Quiz = () => {
                                 onClick={() => handleAnswerSelect(index)}
                                 className={`btn btn-block mb-3 ${
                                     selectedAnswers[currentQuestionIndex] === index
-                                        ? index === questions[currentQuestionIndex].correctAnswer
-                                            ? "btn-success"
-                                            : "btn-danger"
+                                        ? "btn-info"
                                         : "btn-outline-primary"
                                 }`}
-                                style={{ margin: "10px", flex: "1 0 21%" }} // 21% to fit 4 columns with margins
+                                style={{ margin: "10px", flex: "1 0 21%" }}
                             >
                                 {option}
                             </button>
                         ))}
                     </div>
 
-                    <div className="d-flex justify-content-end fixed-bottom" style={{ padding: "20px" }}>
+                    <div className="d-flex justify-content-between fixed-bottom" style={{ padding: "20px" }}>
+                        {currentQuestionIndex > 0 && (
+                            <button
+                                className="btn btn-outline-light"
+                                onClick={() => setCurrentQuestionIndex((prev) => prev - 1)}
+                                style={{ width: "150px" }}
+                            >
+                                Previous
+                            </button>
+                        )}
                         {currentQuestionIndex < questions.length - 1 ? (
                             <button
                                 className="btn btn-secondary"
-                                onClick={() => setCurrentQuestionIndex((prevIndex) => prevIndex + 1)}
-                                disabled={currentQuestionIndex >= questions.length - 1}
+                                onClick={() => setCurrentQuestionIndex((prev) => prev + 1)}
                                 style={{ width: "150px" }}
                             >
-                                Next Question
+                                Next
                             </button>
                         ) : (
                             <button
@@ -228,14 +243,19 @@ const Quiz = () => {
                 </div>
             )}
 
-            {/* Score display */}
-            {!quizStarted && score !== 0 && (
-                <div>
-                    <div className="alert alert-info mt-4">Your score: {score}</div>
-                    <div className="alert alert-info mt-4">Time Taken: {timer} seconds</div>
-                    <button className="btn btn-info" onClick={handleStartOver}>
-                        Start New Quiz
-                    </button>
+            {/* Result Summary */}
+            {!quizStarted && score !== null && selectedCategory && (
+                <div className="card mt-4 text-center">
+                    <div className="card-body">
+                        <h4 className="card-title">Quiz Complete!</h4>
+                        <p className="card-text">Category: {capitalize(selectedCategory.category)}</p>
+                        <p className="card-text">Difficulty: {capitalize(difficulty)}</p>
+                        <p className="card-text">Score: {score}/5</p> {/* Adjusted score */}
+                        <p className="card-text">Time Taken: {timer} seconds</p>
+                        <button className="btn btn-info mt-3" onClick={handleStartOver}>
+                            Start New Quiz
+                        </button>
+                    </div>
                 </div>
             )}
         </div>

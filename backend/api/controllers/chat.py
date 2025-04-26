@@ -1,7 +1,7 @@
 import requests
 from flask import Flask, request, jsonify,Blueprint
 from ..services.gemeni_service import call_gemini_api
-from ..services.gemeni_service import gemeni_query_answers,topic_instructions
+from ..services.gemeni_service import gemeni_query_answers,topic_instructions,clean_questions
 
 cb = Blueprint("chat-service",__name__)
 
@@ -20,20 +20,18 @@ def chat():
 
 @cb.route("/quiz",methods= ["POST"])
 def quiz():
-    # Get the category and difficulty from the request
     data = request.get_json()
     category = data.get("category")
     difficulty = data.get("difficulty")
-    
-    # Validate the input
+    print("Received data:", data)
+
     if category not in topic_instructions:
         return jsonify({"error": "Invalid category"}), 400
 
-    # Fetch questions from the Gemini API based on category
-    questions = gemeni_query_answers(category)
-    
-    if isinstance(questions, str):  # If the response is an error message
-        return jsonify({"error": questions}), 400
+    raw_questions = gemeni_query_answers(category)
+    if isinstance(raw_questions, str):  # Error from Gemini handler
+        return jsonify({"error": raw_questions}), 400
 
-    # Return the questions as a response
+    questions = clean_questions(raw_questions, difficulty)
+
     return jsonify({"questions": questions})
