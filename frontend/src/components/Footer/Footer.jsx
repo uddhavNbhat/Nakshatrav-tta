@@ -7,7 +7,7 @@ const Footer = () => {
         <footer className="footerContainer">
             {/* Quick Links */}
             <div className="section">
-                <h5>Quick Links</h5>
+                <h5>@Copyright Nakshatravrtta 2025</h5>
                 {/* Uncomment this section if you want to add quick links
                 <ul style={styles.list}>
                     <li><a href="#about">About</a></li>

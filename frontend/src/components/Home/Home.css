@@ -1,4 +1,145 @@
 /* General Body and Main Container */
+@import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@700&display=swap');
+.main-container {
+    position: relative;
+    width: 100%;
+    height: 100vh;
+    overflow: hidden;
+  }
+  
+  .background-video {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    z-index: 0;
+  }
+  
+  .button-wrapper-static {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 10;
+  }
+  
+  .custom-button {
+    font-weight: bold;
+    font-size: 1.5rem;
+    padding: 0.75rem 2rem;
+    box-shadow: 0 0 10px #ffe81f;
+  }
+  
+  .crawl-container {
+    position: absolute;
+    bottom: 0;
+    width: 100%;
+    height: 100%;
+    perspective: 1000px;
+    overflow: hidden;
+    z-index: 1;
+    pointer-events: none; /* let clicks pass through */
+  }
+
+  .crawl p:first-of-type {
+    font-size: 4rem;
+    text-align: center;
+  }
+  
+  .crawl p:nth-of-type(2) {
+    font-size: 2.8rem;
+    line-height: 1.6;
+    max-width: 800px;
+    color: white;
+    margin: 0 auto;
+    text-align: justify;
+    margin: 0 auto;
+    font-weight: normal;
+  }
+  
+  .crawl {
+    position: absolute;
+    width: 100%;
+    bottom: -100%;
+    font-family: 'Museo-sans', sans-serif;
+    color: white;
+    font-size: 2.5rem;
+    font-weight: 700;
+    text-align: center;
+    text-shadow: 2px 2px 4px #000;
+    animation: crawl-animation 20s linear infinite;
+    transform: rotateX(35deg);
+    transform-origin: bottom center;
+  }
+  
+  @keyframes crawl-animation {
+    0% {
+        bottom: -100px;
+        opacity: 0;
+    }
+    10% {
+        opacity: 1;
+    }
+    90% {
+        opacity: 1;
+    }
+    100% {
+        bottom: 100vh;
+        opacity: 0;
+    }
+}
+  
+.crawl-container {
+  position: absolute;
+  bottom: 0;
+  width: 100%;
+  height: 100%;
+  perspective: 1000px;
+  overflow: hidden;
+  z-index: 1;
+  pointer-events: none;
+}
+
+.crawl {
+  position: absolute;
+  width: 80%;
+  margin: 0 auto;
+  left: 50%;
+  transform: translateX(-50%) rotateX(25deg);
+  bottom: -100%;
+  animation: crawl-animation 40s linear infinite;
+  text-align: justify;
+  color: #ffe81f;
+  font-family: 'Orbitron', sans-serif;
+  font-weight: bold;
+  text-shadow: 1px 1px 2px #000;
+}
+
+.crawl p:first-of-type {
+  font-size: 2.5rem;
+  text-align: center;
+}
+
+.crawl p:nth-of-type(2) {
+  font-size: 1.1rem;
+  line-height: 1.6;
+  max-width: 800px;
+  margin: 2rem auto;
+  text-align: justify;
+  font-weight: normal;
+}
+
+@keyframes crawl-animation {
+  0% {
+    bottom: -100%;
+    opacity: 1;
+  }
+  100% {
+    bottom: 100%;
+    opacity: 0;
+  }
+}
+
 body, html {
     margin: 0;
     padding: 0;

@@ -14,9 +14,9 @@ function Nav() { // Make sure to pass user and handleLogout as props
                         alt="Logo"
                         width="30"
                         height="24"
-                        className="d-inline-block align-text-top"
+                        className="d-inline-blockalign-text-top"
                     />
-                    Orbitronica
+                    Nakshatravṛtta
                 </Link>
 
                 {/* Navbar Toggle (for mobile view) */}
