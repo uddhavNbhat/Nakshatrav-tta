@@ -97,20 +97,21 @@ const Quiz = () => {
                 newScore += 1;
             }
         });
-    
+
         setScore(newScore);
         setQuizStarted(false);
     };
 
     const handleStartOver = () => {
-        setScore(null);
-        setTimer(0);
-        setQuizStarted(false);
-        setSelectedCategory(null);
-        setDifficulty(null);
-        setQuestions([]);
-        setSelectedAnswers(Array(5).fill(null)); // Adjusted for 5 questions
-        setCurrentQuestionIndex(0);
+        // Reset all states to their initial values
+        setScore(null); // Reset score
+        setTimer(0); // Reset timer
+        setQuizStarted(false); // Set quizStarted to false to show category selection
+        setSelectedCategory(null); // Clear selected category
+        setDifficulty(null); // Clear difficulty
+        setQuestions([]); // Clear the questions array
+        setSelectedAnswers(Array(5).fill(null)); // Reset answers for 5 questions
+        setCurrentQuestionIndex(0); // Reset question index to 0
     };
 
     return (
@@ -187,16 +188,17 @@ const Quiz = () => {
             )}
 
             {/* Quiz Section */}
-            {quizStarted && selectedCategory && (
+            {quizStarted && selectedCategory && questions.length > 0 && (
                 <div>
+                    {/* Check if there are valid questions to render */}
                     <div className="d-flex justify-content-between align-items-center">
                         <h2 className="question-text mb-4">
-                            {questions[currentQuestionIndex].question}
+                            {questions[currentQuestionIndex]?.question || "Loading..."}
                         </h2>
                         <div style={{ color: "white" }}>Timer: {timer}s</div>
                     </div>
                     <div className="mt-3 d-flex flex-wrap justify-content-center">
-                        {questions[currentQuestionIndex].options.map((option, index) => (
+                        {questions[currentQuestionIndex]?.options?.map((option, index) => (
                             <button
                                 key={index}
                                 onClick={() => handleAnswerSelect(index)}
