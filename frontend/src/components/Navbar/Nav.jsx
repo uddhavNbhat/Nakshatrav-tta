@@ -10,7 +10,7 @@ function Nav() { // Make sure to pass user and handleLogout as props
                 {/* Brand Logo and Title */}
                 <Link className="navbar-brand" to="/">
                     <img
-                        src="../../public/nasalogo.jpeg"
+                        src="/nasalogo.jpeg"
                         alt="Logo"
                         width="30"
                         height="24"

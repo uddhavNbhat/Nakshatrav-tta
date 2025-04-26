@@ -1,6 +1,8 @@
 import { useEffect } from "react";
 import * as Spacekit from "spacekit.js";
 import "./About.css";
+import { Link } from "react-router-dom";
+
 
 const About = () => {
     useEffect(() => {
@@ -32,32 +34,32 @@ const About = () => {
 
         // Create spheres for each planet
         viz_four.createSphere('mars', {
-            textureUrl: '../textures/mars.jpg', // Adjust path as needed
+            textureUrl: '/textures/mars.jpg', // Adjust path as needed
         });
         
         const saturn = viz_six.createSphere('saturn', {
-            textureUrl: '../textures/saturn.jpg', // Adjust path as needed
+            textureUrl: '/textures/saturn.jpg', // Adjust path as needed
         });
-        saturn.addRings(184270000.580913, 380478000.924731, "../textures/saturn_rings_top.png"); // Adjust path as needed
+        saturn.addRings(184270000.580913, 380478000.924731, "/textures/saturn_rings_top.png"); // Adjust path as needed
         
         viz_seven.createSphere('uranus', {
-            textureUrl: '../textures/uranus.jpg', // Adjust path as needed
+            textureUrl: '/textures/uranus.jpg', // Adjust path as needed
         });
 
         viz_five.createSphere('jupiter', {
-            textureUrl: '../textures/jupiter.jpg', // Adjust path as needed
+            textureUrl: '/textures/jupiter.jpg', // Adjust path as needed
         });
         viz_one.createSphere('mercury', {
-            textureUrl: '../textures/mercury.jpg', // Adjust path as needed
+            textureUrl: '/textures/mercury.jpg', // Adjust path as needed
         });
         viz_two.createSphere('venus', {
-            textureUrl: '../textures/venus.jpg', // Adjust path as needed
+            textureUrl: '/textures/venus.jpg', // Adjust path as needed
         });
         viz_three.createSphere('earth', {
-            textureUrl: '../textures/earth.jpg', // Adjust path as needed
+            textureUrl: '/textures/earth.jpg', // Adjust path as needed
         });
         viz_eight.createSphere('neptune', {
-            textureUrl: '../textures/neptune.jpg', // Adjust path as needed
+            textureUrl: '/textures/neptune.jpg', // Adjust path as needed
         });
 
     }, []); // Empty dependency array to run only once
@@ -67,61 +69,62 @@ const About = () => {
             <h2 className="card-header">Our Planets</h2>
             <div className='card_container'>
 
-                <div className="card">
-                    <div id="card-one" style={{ width: '600px', height: '300px' }}></div>
+                <Link to="/planet/mercury" className="card">
+                   <div id="card-one" style={{ width: '600px', height: '300px' }}></div>
                     <div className="card-body">
-                        <h3 className="card-title">Mercury</h3>
+                         <h3 className="card-title" style={{ background: "white" }}>Mercury</h3>
                     </div>
-                </div>
+                </Link>
 
-                <div className="card">
+
+                <Link to="/planet/venus" className="card">
                     <div id="card-two" style={{ width: '600px', height: '300px' }}></div>
                     <div className="card-body">
-                        <h3 className="card-title">Venus</h3>
+                        <h3 className="card-title" style={{background:"white"}}>Venus</h3>
                     </div>
-                </div>
+                </Link>
 
-                <div className="card">
+                <Link to="/planet/earth" className="card">
                     <div id="card-three" style={{ width: '600px', height: '300px' }}></div>
                     <div className="card-body">
-                        <h3 className="card-title">Earth</h3>
+                        <h3 className="card-title" style={{background:"white"}}>Earth</h3>
                     </div>
-                </div>
+                </Link>
 
-                <div className="card">
+                <Link to="/planet/mars" className="card">
                     <div id="card-four" style={{ width: '600px', height: '300px' }}></div>
                     <div className="card-body">
-                        <h3 className="card-title">Mars</h3>
+                        <h3 className="card-title" style={{background:"white"}}>Mars</h3>
                     </div>
-                </div>
+                </Link>
 
-                <div className="card">
+                <Link to="/planet/jupiter" className="card">
                     <div id="card-five" style={{ width: '600px', height: '300px' }}></div>
                     <div className="card-body">
-                        <h3 className="card-title">Jupiter</h3>
+                        <h3 className="card-title" style={{background:"white"}}>Jupiter</h3>
                     </div>
-                </div>
+                </Link>
 
-                <div className="card">
+                <Link to="/planet/saturn" className="card">
                     <div id="card-six" style={{ width: '600px', height: '300px' }}></div>
                     <div className="card-body">
-                        <h3 className="card-title">Saturn</h3>
+                        <h3 className="card-title" style={{background:"white"}}>Saturn</h3>
                     </div>
-                </div>
+                </Link>
 
-                <div className="card">
+                <Link to="/planet/uranus" className="card">
                     <div id="card-seven" style={{ width: '600px', height: '300px' }}></div>
                     <div className="card-body">
-                        <h3 className="card-title">Uranus</h3>
+                        <h3 className="card-title" style={{background:"white"}}>Uranus</h3>
                     </div>
-                </div>
+                </Link>
 
-                <div className="card">
+                <Link to="/planet/neptune" className="card">
                     <div id="card-eight" style={{ width: '600px', height: '300px' }}></div>
                     <div className="card-body">
-                        <h3 className="card-title">Neptune</h3>
+                        <h3 className="card-title" style={{background:"white"}}>Neptune</h3>
                     </div>
-                </div>
+                </Link>
 
             </div>
         </div>

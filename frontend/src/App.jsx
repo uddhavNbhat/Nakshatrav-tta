@@ -4,6 +4,7 @@ import Index from "./components/Index.jsx";
 import Quiz from "./components/Quiz/Quiz.jsx";
 import SolarPage from './components/SolarPage.jsx';
 import Comets from './components/Learning/Comets.jsx';
+import PlanetDetail from './components/PlanetDetails/PlanetDetail.jsx';
 
 function App() {
 
@@ -14,6 +15,7 @@ function App() {
         <Route path='/solar' element={<SolarPage/>}/>
         <Route path='/quiz' element = {<Quiz/>}/>
         <Route path='/learning/comet' element={<Comets/>}/>
+        <Route path="/planet/:name" element={<PlanetDetail />} /> 
       </Routes>
     </BrowserRouter>
   )

@@ -1,18 +1,18 @@
 import { useState, useEffect } from "react";
+import axios from "axios";
 import Nav from "../Navbar/Nav";
 import "bootstrap/dist/css/bootstrap.min.css";
 import "bootstrap/dist/js/bootstrap.bundle.min";
-import quizData from "./QuizData.jsx";
 import "./Quiz.css";
 
 const Quiz = () => {
     const [categories, setCategories] = useState({
-        Planets: { easy: [], medium: [], hard: [] },
-        Moons: { easy: [], medium: [], hard: [] },
-        Suns: { easy: [], medium: [], hard: [] },
-        Satellites: { easy: [], medium: [], hard: [] },
-        Asteroids: { easy: [], medium: [], hard: [] },
-        Comets: { easy: [], medium: [], hard: [] },
+        planets: { easy: [], medium: [], hard: [] },
+        moons: { easy: [], medium: [], hard: [] },
+        suns: { easy: [], medium: [], hard: [] },
+        satellites: { easy: [], medium: [], hard: [] },
+        asteroids: { easy: [], medium: [], hard: [] },
+        comets: { easy: [], medium: [], hard: [] },
     });
 
     const images = {
@@ -42,10 +42,10 @@ const Quiz = () => {
     const [timer, setTimer] = useState(0);
     const [quizStarted, setQuizStarted] = useState(false);
     const [selectedCategory, setSelectedCategory] = useState(null);
+    const [difficulty, setDifficulty] = useState(null);
 
     useEffect(() => {
         document.body.style.overflow = "auto";
-        setCategories(quizData);
     }, []);
 
     useEffect(() => {
@@ -60,9 +60,22 @@ const Quiz = () => {
 
     const startQuiz = (category, difficulty) => {
         setSelectedCategory({ category, difficulty });
-        setQuestions(categories[category][difficulty]);
-        setQuizStarted(true);
-        setTimer(0);
+        setDifficulty(difficulty);
+
+        // Send a request to the backend to fetch the quiz data
+        axios
+            .post("http://localhost:5000/api/quiz", { category, difficulty })
+            .then((response) => {
+                const filteredQuestions = response.data.questions.filter(
+                    (question) => question.difficulty === difficulty
+                );
+                setQuestions(filteredQuestions); // Filter questions by difficulty
+                setQuizStarted(true);
+                setTimer(0);
+            })
+            .catch((error) => {
+                console.error("Error starting the quiz:", error);
+            });
     };
 
     const handleAnswerSelect = (index) => {
@@ -82,6 +95,15 @@ const Quiz = () => {
         setQuizStarted(false);
     };
 
+    const handleStartOver = () => {
+        // Reset everything for a new quiz
+        setScore(0);
+        setTimer(0);
+        setQuizStarted(false);
+        setSelectedCategory(null);
+        setSelectedAnswers(Array(10).fill(null));
+    };
+
     return (
         <div className="container mt-5">
             <div className="navbar" style={{ marginBottom: "40px" }}>
@@ -96,36 +118,52 @@ const Quiz = () => {
                             <div className="col-md-3">
                                 <div className="card">
                                     <div className="card-body text-center">
-                                        <img src={images[category]} alt={`${capitalize(category)} Image`} width="294" height="294" />
+                                        <img
+                                            src={images[category]}
+                                            alt={`${capitalize(category)} Image`}
+                                            width="294"
+                                            height="294"
+                                        />
                                     </div>
                                 </div>
                             </div>
-                            <div className="col-md-3" key={category}>
+                            <div className="col-md-3">
                                 <div className="card custom-height">
                                     <div className="card-body text-center">
-                                        <h5 className="card-title mt-5 title-size">{capitalize(category)}</h5>
+                                        <h5 className="card-title mt-5 title-size">
+                                            {capitalize(category)}
+                                        </h5>
                                         <p className="card-text">{categoryDescriptions[category]}</p>
                                     </div>
                                 </div>
                             </div>
-                            <div className="col-md-6" key={category}>
+                            <div className="col-md-6">
                                 <div className="card custom-height">
                                     <div className="card-body text-center">
                                         <div className="d-flex flex-column align-items-start justify-content-center custom-height">
                                             <div className="d-flex align-items-center mb-5 ml-2">
-                                                <button className="btn btn-secondary" onClick={() => startQuiz(category, "easy")}>
+                                                <button
+                                                    className="btn btn-secondary"
+                                                    onClick={() => startQuiz(category, "easy")}
+                                                >
                                                     Easy
                                                 </button>
                                                 <span className="ml-2 text-color">Easy Level</span>
                                             </div>
                                             <div className="d-flex align-items-center mb-5 ml-2">
-                                                <button className="btn btn-primary" onClick={() => startQuiz(category, "medium")}>
+                                                <button
+                                                    className="btn btn-primary"
+                                                    onClick={() => startQuiz(category, "medium")}
+                                                >
                                                     Medium
                                                 </button>
                                                 <span className="ml-2 text-color">Medium Level</span>
                                             </div>
                                             <div className="d-flex align-items-center ml-2">
-                                                <button className="btn btn-danger" onClick={() => startQuiz(category, "hard")}>
+                                                <button
+                                                    className="btn btn-danger"
+                                                    onClick={() => startQuiz(category, "hard")}
+                                                >
                                                     Hard
                                                 </button>
                                                 <span className="ml-2 text-color">Hard Level</span>
@@ -178,7 +216,11 @@ const Quiz = () => {
                                 Next Question
                             </button>
                         ) : (
-                            <button className="btn btn-primary" onClick={handleSubmit} style={{ width: "150px" }}>
+                            <button
+                                className="btn btn-primary"
+                                onClick={handleSubmit}
+                                style={{ width: "150px" }}
+                            >
                                 Submit Test
                             </button>
                         )}
@@ -191,6 +233,9 @@ const Quiz = () => {
                 <div>
                     <div className="alert alert-info mt-4">Your score: {score}</div>
                     <div className="alert alert-info mt-4">Time Taken: {timer} seconds</div>
+                    <button className="btn btn-info" onClick={handleStartOver}>
+                        Start New Quiz
+                    </button>
                 </div>
             )}
         </div>
